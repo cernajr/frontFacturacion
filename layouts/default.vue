@@ -20,52 +20,52 @@
         <v-list-item
           prepend-icon="mdi-account-multiple"
           title="Clientes"
-          value="clientes"
+          to="/clientes"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-package-variant-closed"
           title="Productos"
-          value="productos"
+          to="/productos"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-file-document-outline"
           title="Facturas"
-          value="facturas"
+          to="facturas"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-file-document-edit-outline"
           title="Cotizaciones"
-          value="cotizaciones"
+          to="cotizaciones"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-truck"
           title="Proveedores"
-          value="proveedores"
+          to="proveedores"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-cart"
           title="Compras"
-          value="compras"
+          to="compras"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-chart-bar"
           title="Reportes"
-          value="reportes"
+          to="reportes"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-cog"
           title="Configuración"
-          value="configuracion"
+          to="configuracion"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-help-circle"
           title="Ayuda"
-          value="ayuda"
+          to="ayuda"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-logout"
           title="Cerrar Sesión"
-          value="logout"
+          to="logout"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -85,6 +85,7 @@
       class="d-flex align-center justify-center"
       style="min-height: 300px"
     >
+      <slot />
     </v-main>
   </v-layout>
 </template>
