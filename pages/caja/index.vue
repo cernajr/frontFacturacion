@@ -559,17 +559,17 @@
             <div class="invoice-header">
               <div class="logo-section">
                 <div class="logo">
-                  <span class="logo-text">TRP</span>
-                  <span class="logo-subtext">Turbación</span>
+                  <span class="logo-text">Facturalize</span>
+                  <span class="logo-subtext">Facturalize</span>
                 </div>
               </div>
               <div class="company-info">
-                <p>Tu negocio S. de R. L</p>
+                <p>Facturalize</p>
                 <p>RTN: 8888-8888-000000</p>
-                <p>info@ERPfactura.com</p>
-                <p>http://www.ERPfactura.com</p>
+                <p>info@facturalize.com</p>
+                <p>http://www.facturalize.com</p>
                 <p>---------------------------</p>
-                <p>Atendido por: {{ currentUser.name || "Empleado" }}</p>
+                <p>Atendido por: {{ currentUser.name || "Cajero" }}</p>
               </div>
               <div class="authorized-section">
                 <p class="authorized-text">Facturación autorizada</p>
@@ -580,7 +580,7 @@
             <!-- Sección de datos de factura -->
             <div class="invoice-data">
               <p>CAI: {{ invoice.cai }}</p>
-              <p>Fecha Limite de Emisión: {{ invoice.fechaLimite }}</p>
+              <p>Fecha Limite de Emisión: {{ invoice.fechaLimite || "31/12/2025"}}</p>
               <p>
                 Rango autorizado: {{ invoice.rangoInicio }} al
                 {{ invoice.rangoFin }}
