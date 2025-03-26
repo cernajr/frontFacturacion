@@ -13,9 +13,14 @@
 
       <v-list density="compact" nav>
         <v-list-item
-          prepend-icon="mdi-view-dashboard"
-          title="Dashboard"
-          value="dashboard"
+          prepend-icon="mdi-home"
+          title="Home"
+          value="/home"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi-cash-register"
+          title="Caja"
+          to="/caja"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-account-multiple"
@@ -23,45 +28,50 @@
           to="/clientes"
         ></v-list-item>
         <v-list-item
-          prepend-icon="mdi-package-variant-closed"
-          title="Productos"
-          to="/productos"
+          prepend-icon="mdi-account"
+          title="Colaboradores"
+          to="/colaboradores"
         ></v-list-item>
         <v-list-item
-          prepend-icon="mdi-file-document-outline"
-          title="Facturas"
-          to="facturas"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-file-document-edit-outline"
-          title="Cotizaciones"
-          to="cotizaciones"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-truck"
-          title="Proveedores"
-          to="proveedores"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-cart"
-          title="Compras"
-          to="compras"
+          prepend-icon="mdi-package-variant"
+          title="Inventario"
+          to="/inventario"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-chart-bar"
           title="Reportes"
           to="reportes"
         ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-cog"
-          title="Configuración"
-          to="configuracion"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-help-circle"
-          title="Ayuda"
-          to="ayuda"
-        ></v-list-item>
+        <v-list-group value="Parametros">
+          <template v-slot:activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              prepend-icon="mdi-cog"
+              title="Parámetros"
+              class="parameter-group"
+            ></v-list-item>
+          </template>
+
+          <v-list-item
+            v-for="subItem in parameterMenuItems"
+            :key="subItem.title"
+            :prepend-icon="subItem.icon"
+            :title="subItem.title"
+            :to="subItem.to"
+            :value="subItem.title.toLowerCase()"
+            class="parameter-item"
+          >
+            <template v-slot:prepend>
+              <v-icon size="20" class="me-2">{{ subItem.icon }}</v-icon>
+            </template>
+            <template v-slot:title>
+              <span class="text-truncate" style="max-width: 180px">{{
+                subItem.title
+              }}</span>
+            </template>
+          </v-list-item>
+        </v-list-group>
+
         <v-list-item
           prepend-icon="mdi-logout"
           title="Cerrar Sesión"
@@ -110,6 +120,16 @@ function toggleTheme() {
   }
 }
 
+const parameterMenuItems = [
+  { title: "Proveedores", to: "/proveedores", icon: "mdi-truck-delivery" },
+  {
+    title: "Categoría",
+    to: "/categoria",
+    icon: "mdi-shape-outline",
+  },
+  { title: "Unidad de Medida", to: "/unidad", icon: "mdi-scale" },
+];
+
 // Inicializar el tema solo en el cliente
 onMounted(() => {
   if (process.client) {
@@ -128,5 +148,34 @@ onMounted(() => {
 
 .v-btn--icon:hover {
   transform: scale(1.1);
+}
+
+:deep(.parameter-group) {
+  margin-bottom: 4px;
+}
+
+:deep(.parameter-item) {
+  padding-left: 12px !important;
+  min-height: 40px !important;
+}
+
+:deep(.v-list-group__items .v-list-item) {
+  padding-left: 16px;
+}
+
+:deep(.v-list-group--prepend) {
+  padding-inline-start: 0px !important;
+}
+
+:deep(.v-list-item--active) {
+  background-color: rgb(var(--v-theme-primary), 0.1) !important;
+}
+
+:deep(.v-list-item--active::before) {
+  opacity: 0 !important;
+}
+
+:deep(.v-list-group__items .v-icon) {
+  opacity: 0.8;
 }
 </style>

@@ -12,6 +12,7 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }));
       });
     },
+    
   ],
   vite: {
     vue: {
@@ -22,7 +23,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: "http://localhost:3100/api-web",
+      apiBase: "http://localhost:3005/api/v1",
     },
   },
 });

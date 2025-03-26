@@ -9,7 +9,7 @@
     </div>
 
     <v-card>
-      <v-card-title> Clientes </v-card-title>
+      <v-card-title> Proveedores </v-card-title>
       <v-card-text>
         <v-row class="d-flex align-center">
           <v-col cols="12" md="6" class="d-flex justify-start">
@@ -19,7 +19,7 @@
               color="primary"
               @click="dialogCrear = true"
             >
-              Agregar Cliente
+              Agregar Proveedor
             </v-btn>
           </v-col>
           <v-col cols="12" md="6" class="d-flex justify-end">
@@ -37,7 +37,7 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-data-table :headers="headers" :items="datos" :search="search">
+            <v-data-table :headers="hearders" :items="datos" :search="search">
               <template #[`item.estado`]="{ item }">
                 <v-chip
                   :color="resolveStatusVariant(item.estado).color"
@@ -89,15 +89,15 @@
     <!--dialog crear-->
     <v-dialog v-model="dialogCrear" width="800">
       <v-card>
-        <v-card-title> Nuevo Cliente </v-card-title>
+        <v-card-title> Nuevo Proveedor </v-card-title>
         <v-card-text>
           <v-form ref="form">
             <v-row>
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.nombre"
-                  label="Nombre del cliente"
-                  placeholder="Ej. Juan Pérez"
+                  label="Nombre del proveedor"
+                  placeholder="Ej. Distribuidora Sula"
                   :rules="[rules.required, rules.nombre]"
                   required
                 ></v-text-field>
@@ -105,8 +105,8 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.direccion"
-                  label="Dirección del cliente"
-                  placeholder="Ej. Colonia Kennedy, Calle 5, Casa #20"
+                  label="Dirección del proveedor"
+                  placeholder="Ej. Colonia El Sauce, Calle 5, Casa #20"
                   :rules="[rules.required, rules.direccion]"
                   required
                 ></v-text-field>
@@ -114,7 +114,7 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.telefono"
-                  label="Teléfono del cliente"
+                  label="Teléfono del proveedor"
                   placeholder="Ej. 98765432"
                   :rules="[rules.required, rules.telefono]"
                   required
@@ -123,22 +123,13 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.correo"
-                  label="Correo del cliente"
-                  placeholder="Ej. cliente@gmail.com"
+                  label="Correo del proveedor"
+                  placeholder="Ej. contacto@sula.com"
                   :rules="[rules.correo]"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="formData.rtn"
-                  label="RTN del cliente"
-                  placeholder="Ej. 08011990123456"
-                  :rules="[rules.required, rules.rtn]"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
+              <v-col cols="12">
                 <v-select
                   v-model="formData.estado"
                   :items="estadoOptions"
@@ -167,15 +158,15 @@
     <!--dialog editar-->
     <v-dialog v-model="dialogEditar" width="800">
       <v-card>
-        <v-card-title> Editar Cliente </v-card-title>
+        <v-card-title> Editar Proveedor </v-card-title>
         <v-card-text>
           <v-form ref="form">
             <v-row>
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.nombre"
-                  label="Nombre del cliente"
-                  placeholder="Ej. Juan Pérez"
+                  label="Nombre del proveedor"
+                  placeholder="Ej. Distribuidora Sula"
                   :rules="[rules.required, rules.nombre]"
                   required
                 ></v-text-field>
@@ -183,8 +174,8 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.direccion"
-                  label="Dirección del cliente"
-                  placeholder="Ej. Colonia Kennedy, Calle 5, Casa #20"
+                  label="Dirección del proveedor"
+                  placeholder="Ej. Colonia El Sauce, Calle 5, Casa #20"
                   :rules="[rules.required, rules.direccion]"
                   required
                 ></v-text-field>
@@ -192,7 +183,7 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.telefono"
-                  label="Teléfono del cliente"
+                  label="Teléfono del proveedor"
                   placeholder="Ej. 98765432"
                   :rules="[rules.required, rules.telefono]"
                   required
@@ -201,22 +192,13 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="formData.correo"
-                  label="Correo del cliente"
-                  placeholder="Ej. cliente@gmail.com"
+                  label="Correo del proveedor"
+                  placeholder="Ej. contacto@sula.com"
                   :rules="[rules.correo]"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="formData.rtn"
-                  label="RTN del cliente"
-                  placeholder="Ej. 08011990123456"
-                  :rules="[rules.required, rules.rtn]"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
+              <v-col cols="12">
                 <v-select
                   v-model="formData.estado"
                   :items="estadoOptions"
@@ -245,14 +227,14 @@
     <!--dialog detalles-->
     <v-dialog v-model="dialogDetalles" width="800">
       <v-card>
-        <v-card-title> Detalles del Cliente </v-card-title>
+        <v-card-title> Detalles del Proveedor </v-card-title>
         <v-card-text>
           <v-form>
             <v-row>
               <v-col cols="6">
                 <v-text-field
                   v-model="detallesData.nombre"
-                  label="Nombre del cliente"
+                  label="Nombre del proveedor"
                   readonly
                   variant="outlined"
                   density="comfortable"
@@ -261,7 +243,7 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="detallesData.direccion"
-                  label="Dirección del cliente"
+                  label="Dirección del proveedor"
                   readonly
                   variant="outlined"
                   density="comfortable"
@@ -270,7 +252,7 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="detallesData.telefono"
-                  label="Teléfono del cliente"
+                  label="Teléfono del proveedor"
                   readonly
                   variant="outlined"
                   density="comfortable"
@@ -279,22 +261,13 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="detallesData.correo"
-                  label="Correo del cliente"
+                  label="Correo del proveedor"
                   readonly
                   variant="outlined"
                   density="comfortable"
                 ></v-text-field>
               </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="detallesData.rtn"
-                  label="RTN del cliente"
-                  readonly
-                  variant="outlined"
-                  density="comfortable"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
+              <v-col cols="12">
                 <v-select
                   v-model="detallesData.estado"
                   :items="estadoOptions"
@@ -325,7 +298,7 @@
     <v-dialog v-model="isConfirmDialogVisible" persistent width="500">
       <v-card title="Confirmar eliminación">
         <v-card-text>
-          ¿Está seguro que desea eliminar este cliente? Esta acción no se
+          ¿Está seguro que desea eliminar este proveedor? Esta acción no se
           puede deshacer.
         </v-card-text>
         <v-card-actions>
@@ -346,7 +319,7 @@
     <v-dialog v-model="dialogEliminar" persistent width="300">
       <v-card color="primary" width="300">
         <v-card-text class="pt-3">
-          Eliminando cliente...
+          Eliminando proveedor...
           <v-progress-linear
             indeterminate
             bg-color="rgba(var(--v-theme-surface), 0.1)"
@@ -386,17 +359,16 @@ const detallesData = ref({
   direccion: "",
   telefono: "",
   correo: "",
-  rtn: "",
   estado: true,
 });
 
+
+
 const formData = ref({
-  empresaId: 0,
   nombre: "",
   direccion: "",
   telefono: "",
   correo: "",
-  rtn: "",
   estado: true,
 });
 
@@ -406,13 +378,13 @@ const itemsBread = ref([
     disabled: false,
   },
   {
-    title: "Clientes",
+    title: "Proveedores",
     disabled: false,
-    href: "/cliente",
+    href: "/proveedor",
   },
 ]);
 
-const headers = [
+const hearders = [
   {
     title: "N°",
     key: "nro",
@@ -425,10 +397,6 @@ const headers = [
   {
     title: "Teléfono",
     key: "telefono",
-  },
-  {
-    title: "RTN",
-    key: "rtn",
   },
   {
     title: "Estado",
@@ -460,9 +428,6 @@ const rules = {
   correo: (v) =>
     !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ||
     "Ingrese un correo electrónico válido",
-  rtn: (v) =>
-    /^[0-9]{10,14}$/.test(v) ||
-    "Ingrese un RTN válido (entre 10 y 14 dígitos)",
   estadoRequired: (v) => v !== undefined || "Este campo es requerido",
 };
 
@@ -473,7 +438,7 @@ const resolveStatusVariant = (estado) => {
 
 const getData = async () => {
   try {
-    const response = await $fetch(runtimeConfig.public.apiBase + "/cliente", {
+    const response = await $fetch(runtimeConfig.public.apiBase + "/proveedor", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -508,7 +473,7 @@ const handleCreate = async () => {
   }
 
   try {
-    const response = await $fetch(runtimeConfig.public.apiBase + "/cliente", {
+    const response = await $fetch(runtimeConfig.public.apiBase + "/proveedor", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -518,7 +483,7 @@ const handleCreate = async () => {
 
     if (response) {
       snackbarColor.value = "success";
-      snackbarMessage.value = "Cliente creado exitosamente";
+      snackbarMessage.value = "Proveedor creado exitosamente";
       isSnackbarVisible.value = true;
       closeDialog();
       getData();
@@ -527,7 +492,7 @@ const handleCreate = async () => {
     }
   } catch (e) {
     snackbarColor.value = "error";
-    snackbarMessage.value = e.data.message || "Error al crear el cliente";
+    snackbarMessage.value = e.data.message || "Error al crear el proveedor";
     isSnackbarVisible.value = true;
   }
 };
@@ -545,7 +510,7 @@ const handleUpdate = async () => {
 
   try {
     const response = await $fetch(
-      `${runtimeConfig.public.apiBase}/cliente/${editingItemId.value}`,
+      `${runtimeConfig.public.apiBase}/proveedor/${editingItemId.value}`,
       {
         method: "PUT",
         headers: {
@@ -556,14 +521,14 @@ const handleUpdate = async () => {
     );
 
     snackbarColor.value = "success";
-    snackbarMessage.value = "Cliente actualizado exitosamente";
+    snackbarMessage.value = "Proveedor actualizado exitosamente";
     isSnackbarVisible.value = true;
     closeDialog();
     getData();
   } catch (e) {
     snackbarColor.value = "error";
     snackbarMessage.value =
-      e.data.message || "Error al actualizar el cliente";
+      e.data.message || "Error al actualizar el proveedor";
     isSnackbarVisible.value = true;
   }
 };
@@ -573,7 +538,7 @@ const handleDelete = async () => {
   dialogEliminar.value = true;
   try {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const response = await $fetch(`${runtimeConfig.public.apiBase}/cliente/${deleteItemId.value}`, {
+    const response = await $fetch(`${runtimeConfig.public.apiBase}/proveedor/${deleteItemId.value}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -583,7 +548,7 @@ const handleDelete = async () => {
     await new Promise((resolve) => setTimeout(resolve, 500));
     dialogEliminar.value = false;
     snackbarColor.value = "success";
-    snackbarMessage.value = "Cliente eliminado exitosamente";
+    snackbarMessage.value = "Proveedor eliminado exitosamente";
     isSnackbarVisible.value = true;
 
     await getData();
@@ -591,7 +556,7 @@ const handleDelete = async () => {
   } catch (error) {
     snackbarColor.value = "error";
     snackbarMessage.value =
-      error.data.message || "Error al eliminar el cliente";
+      error.data.message || "Error al eliminar el proveedor";
     isSnackbarVisible.value = true;
   } finally {
     closeDialog();
@@ -604,7 +569,7 @@ const editItem = async (id) => {
 
   try {
     const response = await $fetch(
-      `${runtimeConfig.public.apiBase}/cliente/${id}`,
+      `${runtimeConfig.public.apiBase}/proveedor/${id}`,
       {
         method: "GET",
         headers: {
@@ -614,19 +579,17 @@ const editItem = async (id) => {
     );
 
     formData.value = {
-      empresaId: 0,
       nombre: response.nombre,
       direccion: response.direccion,
       telefono: response.telefono,
       correo: response.correo,
-      rtn: response.rtn,
       estado: response.estado,
     };
     dialogEditar.value = true;
   } catch (e) {
     snackbarColor.value = "error";
     snackbarMessage.value =
-      e.data.message || "Error al cargar los datos del cliente";
+      e.data.message || "Error al cargar los datos del proveedor";
     isSnackbarVisible.value = true;
   }
 };
@@ -634,7 +597,7 @@ const editItem = async (id) => {
 const viewDetails = async (id) => {
   try {
     const response = await $fetch(
-      `${runtimeConfig.public.apiBase}/cliente/${id}`,
+      `${runtimeConfig.public.apiBase}/proveedor/${id}`,
       {
         method: "GET",
         headers: {
@@ -649,7 +612,6 @@ const viewDetails = async (id) => {
       direccion: response.direccion,
       telefono: response.telefono,
       correo: response.correo,
-      rtn: response.rtn,
       estado: response.estado,
     };
     
@@ -657,7 +619,7 @@ const viewDetails = async (id) => {
   } catch (e) {
     snackbarColor.value = "error";
     snackbarMessage.value =
-      e.data.message || "Error al cargar los detalles del cliente";
+      e.data.message || "Error al cargar los detalles del proveedor";
     isSnackbarVisible.value = true;
   }
 };
@@ -676,13 +638,11 @@ const closeDialog = () => {
   editingItemId.value = null;
   deleteItemId.value = null;
   formData.value = {
-    empresaId: 0,
     nombre: "",
     direccion: "",
     telefono: "",
     correo: "",
-    rtn: "",
     estado: true,
   };
 };
-</script> 
+</script>
