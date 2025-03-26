@@ -15,7 +15,7 @@
         <v-list-item
           prepend-icon="mdi-home"
           title="Home"
-          value="/home"
+          to="/home"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-cash-register"
@@ -27,11 +27,11 @@
           title="Clientes"
           to="/clientes"
         ></v-list-item>
-        <v-list-item
+        <!--<v-list-item
           prepend-icon="mdi-account"
           title="Colaboradores"
           to="/colaboradores"
-        ></v-list-item>
+        ></v-list-item>-->
         <v-list-item
           prepend-icon="mdi-package-variant"
           title="Inventario"

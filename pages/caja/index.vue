@@ -98,11 +98,14 @@
                 <td>L {{ calculateTax(item).toFixed(2) }}</td>
                 <td>L {{ (item.precio_venta * item.cantidad).toFixed(2) }}</td>
                 <td>
-                  <button @click="removeItem(index)" class="action-btn delete-btn">
-  <i class="fas fa-trash"></i>
-  <span class="delete-text">✕</span>
-</button>
-</td>
+                  <button
+                    @click="removeItem(index)"
+                    class="action-btn delete-btn"
+                  >
+                    <i class="fas fa-trash"></i>
+                    <span class="delete-text">✕</span>
+                  </button>
+                </td>
               </tr>
               <tr v-if="cartItems.length === 0">
                 <td colspan="7" class="no-data">
@@ -580,7 +583,10 @@
             <!-- Sección de datos de factura -->
             <div class="invoice-data">
               <p>CAI: {{ invoice.cai }}</p>
-              <p>Fecha Limite de Emisión: {{ invoice.fechaLimite || "31/12/2025"}}</p>
+              <p>
+                Fecha Limite de Emisión:
+                {{ invoice.fechaLimite }}
+              </p>
               <p>
                 Rango autorizado: {{ invoice.rangoInicio }} al
                 {{ invoice.rangoFin }}
@@ -1633,22 +1639,17 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
-  
   /* Propiedades para centrar el contenido */
   display: flex;
   align-items: center;
   justify-content: center;
-  
   /* Dimensiones fijas para asegurar forma cuadrada */
   width: 36px;
   height: 36px;
-  
   /* Quitar padding para control total de dimensiones */
   padding: 0;
-  
   /* Tamaño de fuente para el emoji o ícono */
   font-size: 18px;
-  
   /* Eliminar las transformaciones por defecto de texto */
   text-align: center;
   line-height: 1;
@@ -1667,16 +1668,13 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
-  
   /* Propiedades para centrar el contenido */
   display: flex;
   align-items: center;
   justify-content: center;
-  
   /* Dimensiones fijas */
   width: 36px;
   height: 36px;
-  
   /* Quitar padding para control total */
   padding: 0;
 }
