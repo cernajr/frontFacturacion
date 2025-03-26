@@ -40,7 +40,7 @@
         <v-list-item
           prepend-icon="mdi-chart-bar"
           title="Reportes"
-          to="reportes"
+          to="/reporte"
         ></v-list-item>
         <v-list-group value="Parametros">
           <template v-slot:activator="{ props }">
@@ -72,11 +72,11 @@
           </v-list-item>
         </v-list-group>
 
-        <v-list-item
+        <!--<v-list-item
           prepend-icon="mdi-logout"
           title="Cerrar Sesión"
           to="logout"
-        ></v-list-item>
+        ></v-list-item>-->
       </v-list>
     </v-navigation-drawer>
 
