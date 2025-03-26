@@ -98,13 +98,11 @@
                 <td>L {{ calculateTax(item).toFixed(2) }}</td>
                 <td>L {{ (item.precio_venta * item.cantidad).toFixed(2) }}</td>
                 <td>
-                  <button
-                    @click="removeItem(index)"
-                    class="action-btn delete-btn"
-                  >
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
+                  <button @click="removeItem(index)" class="action-btn delete-btn">
+  <i class="fas fa-trash"></i>
+  <span class="delete-text">✕</span>
+</button>
+</td>
               </tr>
               <tr v-if="cartItems.length === 0">
                 <td colspan="7" class="no-data">
@@ -1624,6 +1622,122 @@ export default {
   min-height: 100vh;
   padding: 20px;
   font-family: "Arial", sans-serif;
+}
+
+/* Estilos para centrar perfectamente el ícono dentro del botón */
+
+.simple-delete-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  /* Propiedades para centrar el contenido */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Dimensiones fijas para asegurar forma cuadrada */
+  width: 36px;
+  height: 36px;
+  
+  /* Quitar padding para control total de dimensiones */
+  padding: 0;
+  
+  /* Tamaño de fuente para el emoji o ícono */
+  font-size: 18px;
+  
+  /* Eliminar las transformaciones por defecto de texto */
+  text-align: center;
+  line-height: 1;
+}
+
+.simple-delete-btn:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
+}
+
+/* En caso de usar Font Awesome */
+.action-btn.delete-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  /* Propiedades para centrar el contenido */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Dimensiones fijas */
+  width: 36px;
+  height: 36px;
+  
+  /* Quitar padding para control total */
+  padding: 0;
+}
+
+/* Centrar el ícono de Font Awesome dentro del botón */
+.action-btn.delete-btn i {
+  /* Centrar el ícono si se mueve */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Asegurar que la celda esté centrada */
+.cart-list table tbody tr td:last-child {
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 12px;
+}
+
+.cart-list table tbody tr td:last-child {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* Centra el botón de eliminar */
+.cart-list table .action-btn.delete-btn,
+.cart-list table .simple-delete-btn {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.action-btn.delete-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.action-btn.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+.action-btn.delete-btn i {
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+/* Texto de respaldo visible */
+.delete-text {
+  font-weight: bold;
+  font-size: 16px;
 }
 
 /* Estilos de navegación */
