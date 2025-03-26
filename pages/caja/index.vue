@@ -43,14 +43,16 @@
           >
             <div class="product-info">
               <span class="product-name">{{ product.nombre }}</span>
-              <span class="product-code">Código: {{ product.codigo }}</span>
+              <span class="product-code"
+                >Código: {{ product.codigoProducto }}</span
+              >
               <span class="product-stock">Stock: {{ product.stock }}</span>
             </div>
             <div class="product-price">
               L {{ product.precio_venta.toFixed(2) }}
             </div>
           </div>
-          <div v-if="searchResults.length === 0" class="no-results">
+          <div v-if="products.length === 0" class="no-results">
             No se encontraron productos
           </div>
         </div>
@@ -215,69 +217,69 @@
     </div>
 
     <!-- Modal para nuevo cliente -->
-     <!-- Modal para nuevo cliente -->
-<div v-if="showNewCustomerModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Registrar Nuevo Cliente</h2>
-      <button @click="cancelNewCustomer" class="modal-close">
-        &times;
-      </button>
+    <!-- Modal para nuevo cliente -->
+    <div v-if="showNewCustomerModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Registrar Nuevo Cliente</h2>
+          <button @click="cancelNewCustomer" class="modal-close">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Nombre completo*:</label>
+            <input
+              v-model="newCustomer.nombre"
+              type="text"
+              placeholder="Nombre del cliente"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>RTN:</label>
+            <input
+              v-model="newCustomer.rtn"
+              type="text"
+              placeholder="RTN (opcional)"
+            />
+          </div>
+          <div class="form-group">
+            <label>Teléfono*:</label>
+            <input
+              v-model="newCustomer.telefono"
+              type="text"
+              placeholder="Teléfono"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Correo:</label>
+            <input
+              v-model="newCustomer.correo"
+              type="email"
+              placeholder="Correo electrónico"
+            />
+          </div>
+          <div class="form-group">
+            <label>Dirección:</label>
+            <input
+              v-model="newCustomer.direccion"
+              type="text"
+              placeholder="Dirección"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button @click="cancelNewCustomer" class="btn cancel-btn">
+            Cancelar
+          </button>
+          <button @click="saveNewCustomer" class="btn confirm-btn">
+            Guardar Cliente
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Nombre completo*:</label>
-        <input
-          v-model="newCustomer.nombre"
-          type="text"
-          placeholder="Nombre del cliente"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label>RTN:</label>
-        <input
-          v-model="newCustomer.rtn"
-          type="text"
-          placeholder="RTN (opcional)"
-        />
-      </div>
-      <div class="form-group">
-        <label>Teléfono*:</label>
-        <input
-          v-model="newCustomer.telefono"
-          type="text"
-          placeholder="Teléfono"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label>Correo:</label>
-        <input
-          v-model="newCustomer.correo"
-          type="email"
-          placeholder="Correo electrónico"
-        />
-      </div>
-      <div class="form-group">
-        <label>Dirección:</label>
-        <input
-          v-model="newCustomer.direccion"
-          type="text"
-          placeholder="Dirección"
-        />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button @click="cancelNewCustomer" class="btn cancel-btn">
-        Cancelar
-      </button>
-      <button @click="saveNewCustomer" class="btn confirm-btn">
-        Guardar Cliente
-      </button>
-    </div>
-  </div>
-</div>
     <!--<div v-if="showNewCustomerModal" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
@@ -718,11 +720,11 @@ export default {
       // Nuevo cliente
       showNewCustomerModal: false,
       newCustomer: {
-        nombre: '',
-  rtn: '',
-  telefono: '',
-  direccion: '',
-  correo: ''
+        nombre: "",
+        rtn: "",
+        telefono: "",
+        direccion: "",
+        correo: "",
       },
 
       // Métodos de pago
@@ -819,100 +821,125 @@ export default {
     },
 
     async fetchProducts() {
-  try {
-    console.log('Intentando cargar productos desde:', 'http://localhost:3005/api/vi/producto');
-    const response = await fetch('http://localhost:3005/api/vi/producto');
-    
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
-    }
-    
-    const data = await response.json();
-    
-    // Diagnóstico extenso - inspeccionar la estructura de los datos
-    console.log('Respuesta completa:', data);
-    
-    if (data && Array.isArray(data) && data.length > 0) {
-      console.log('Primer producto (muestra):', data[0]);
-      
-      // Verificar campos críticos necesarios para la visualización
-      const requiredFields = ['nombre', 'codigo', 'stock', 'precio_venta'];
-      const missingFields = [];
-      
-      // Verificar si el objeto tiene todos los campos necesarios
-      for (const field of requiredFields) {
-        if (data[0][field] === undefined) {
-          missingFields.push(field);
-        }
-      }
-      
-      if (missingFields.length > 0) {
-        console.warn('Campos requeridos faltantes:', missingFields);
-        
-        // Mapear los datos para adaptarlos al formato esperado
-        this.products = data.map(item => this.mapProductData(item))
-          .filter(product => product.stock > 0);
-      } else {
-        // Los datos tienen el formato esperado
-        this.products = data.filter(product => product.stock > 0);
-      }
-      
-      this.searchResults = [...this.products];
-      console.log('Productos procesados y listos:', this.products.length);
-    } else {
-      console.error('Formato de respuesta inesperado o vacío:', data);
-      throw new Error('Formato de respuesta inesperado o vacío');
-    }
-  } catch (error) {
-    console.error('Error detallado al cargar productos:', error);
-    
-    // Datos de prueba solo si falla la carga
-    this.products = [
-      { id: 1, nombre: 'Laptop HP', codigo: 'LHP001', stock: 10, precio_venta: 15000.00 },
-      { id: 2, nombre: 'Monitor Dell 24"', codigo: 'MD001', stock: 15, precio_venta: 3500.00 },
-      { id: 3, nombre: 'Teclado Mecánico', codigo: 'TM001', stock: 20, precio_venta: 1200.00 },
-      { id: 4, nombre: 'Mouse Inalámbrico', codigo: 'MI001', stock: 25, precio_venta: 450.00 },
-      { id: 5, nombre: 'Audífonos Bluetooth', codigo: 'AB001', stock: 18, precio_venta: 850.00 },
-      { id: 6, nombre: 'Impresora Multifuncional', codigo: 'IM001', stock: 8, precio_venta: 4200.00 }
-    ];
-    this.searchResults = [...this.products];
-    
-    console.log('Usando datos de prueba provisionales:', this.products.length);
-    alert('Error al cargar productos de la base de datos. Se están usando datos de prueba temporales.');
-  }
-},
+      try {
+        console.log(
+          "Intentando cargar productos desde:",
+          "http://localhost:3005/api/v1/producto"
+        );
+        const response = await fetch("http://localhost:3005/api/v1/producto");
 
-// Método para mapear productos a la estructura esperada
-mapProductData(item) {
-  // Copia base del producto
-  const product = { ...item };
-  
-  // Mapear campos si tienen nombres diferentes en la API
-  // Por ejemplo, si en la API viene como 'name' pero necesitamos 'nombre'
-  if (product.name !== undefined && product.nombre === undefined) {
-    product.nombre = product.name;
-  }
-  
-  if (product.code !== undefined && product.codigo === undefined) {
-    product.codigo = product.code;
-  }
-  
-  if (product.inventory !== undefined && product.stock === undefined) {
-    product.stock = product.inventory;
-  }
-  
-  if (product.price !== undefined && product.precio_venta === undefined) {
-    product.precio_venta = product.price;
-  }
-  
-  // Asegurarse de que los valores requeridos estén presentes
-  product.nombre = product.nombre || 'Producto sin nombre';
-  product.codigo = product.codigo || 'SIN-CODIGO';
-  product.stock = product.stock || 0;
-  product.precio_venta = product.precio_venta || 0;
-  
-  return product;
-},
+        if (!response.ok) {
+          throw new Error(
+            `Error HTTP: ${response.status} - ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+
+        // Diagnóstico extenso - inspeccionar la estructura de los datos
+        console.log("Respuesta completa:", data);
+
+        if (data && Array.isArray(data) && data.length > 0) {
+          console.log("Primer producto (muestra):", data[0]);
+
+          // Mapear los datos para adaptarlos al formato esperado
+          this.products = data.map((item) => this.mapProductData(item));
+
+          this.searchResults = [...this.products];
+          console.log("Productos procesados y listos:", this.products.length);
+        } else {
+          console.error("Formato de respuesta inesperado o vacío:", data);
+          throw new Error("Formato de respuesta inesperado o vacío");
+        }
+      } catch (error) {
+        //console.error('Error detallado al cargar productos:', error);
+
+        // Datos de prueba solo si falla la carga
+        this.products = [
+          {
+            id: 1,
+            nombre: "Laptop HP",
+            codigo: "LHP001",
+            stock: 10,
+            precio_venta: 15000.0,
+          },
+          {
+            id: 2,
+            nombre: 'Monitor Dell 24"',
+            codigo: "MD001",
+            stock: 15,
+            precio_venta: 3500.0,
+          },
+          {
+            id: 3,
+            nombre: "Teclado Mecánico",
+            codigo: "TM001",
+            stock: 20,
+            precio_venta: 1200.0,
+          },
+          {
+            id: 4,
+            nombre: "Mouse Inalámbrico",
+            codigo: "MI001",
+            stock: 25,
+            precio_venta: 450.0,
+          },
+          {
+            id: 5,
+            nombre: "Audífonos Bluetooth",
+            codigo: "AB001",
+            stock: 18,
+            precio_venta: 850.0,
+          },
+          {
+            id: 6,
+            nombre: "Impresora Multifuncional",
+            codigo: "IM001",
+            stock: 8,
+            precio_venta: 4200.0,
+          },
+        ];
+        this.searchResults = [...this.products];
+
+        console.log(
+          "Usando datos de prueba provisionales:",
+          this.products.length
+        );
+        //alert('Error al cargar productos de la base de datos. Se están usando datos de prueba temporales.');
+      }
+    },
+
+    // Método para mapear productos a la estructura esperada
+    mapProductData(item) {
+      // Copia base del producto
+      const product = { ...item };
+
+      // Mapear campos si tienen nombres diferentes en la API
+      // Por ejemplo, si en la API viene como 'name' pero necesitamos 'nombre'
+      if (product.name !== undefined && product.nombre === undefined) {
+        product.nombre = product.name;
+      }
+
+      if (product.code !== undefined && product.codigoProducto === undefined) {
+        product.codigoProducto = product.code;
+      }
+
+      if (product.inventory !== undefined && product.stock === undefined) {
+        product.stock = product.inventory;
+      }
+
+      if (product.price !== undefined && product.precio_venta === undefined) {
+        product.precio_venta = product.price;
+      }
+
+      // Asegurarse de que los valores requeridos estén presentes
+      product.nombre = product.nombre || "Producto sin nombre";
+      product.codigoProducto = product.codigoProducto || "SIN-CODIGO";
+      product.stock = product.stock || 0;
+      product.precio_venta = Number(product.precio_venta) || 0;
+
+      return product;
+    },
 
     /*async fetchProducts() {
   try {
@@ -973,7 +1000,7 @@ mapProductData(item) {
         if (data && Array.isArray(data)) {
           this.products = data.filter((product) => product.stock > 0);
           this.searchResults = [...this.products];
-          console.log("Productos cargados:", this.products.length);
+          console.log("Productos cargados:", this.  .length);
         } else {
           console.error("Formato de respuesta inesperado:", data);
           this.products = [];
@@ -993,7 +1020,7 @@ mapProductData(item) {
 
     searchProducts() {
       if (!this.productSearch.trim()) {
-        this.searchResults = [...this.products];
+        this.fetchProducts();
         return;
       }
 
@@ -1001,8 +1028,13 @@ mapProductData(item) {
       this.searchResults = this.products.filter(
         (product) =>
           product.nombre.toLowerCase().includes(searchTerm) ||
-          product.codigo.toLowerCase().includes(searchTerm)
+          (product.codigoProducto &&
+            product.codigoProducto
+              .toString()
+              .toLowerCase()
+              .includes(searchTerm))
       );
+      this.products = [...this.searchResults];
     },
 
     addToCart(product) {
@@ -1064,28 +1096,57 @@ mapProductData(item) {
     },
 
     // Cálculos
+    // Método para calcular el ISV (impuesto) de un ítem
+    // Considerando que el precio ya incluye el impuesto
     calculateTax(item) {
-      return item.precio_venta * item.cantidad * 0.15;
+      // Factor de ISV (15%)
+      const taxFactor = 0.15;
+
+      // Si el precio incluye el impuesto, tenemos que calcularlo así:
+      // precio con impuesto = precio sin impuesto * (1 + taxFactor)
+      // por lo tanto: precio sin impuesto = precio con impuesto / (1 + taxFactor)
+      // y el impuesto = precio con impuesto - precio sin impuesto
+
+      const priceWithTax = item.precio_venta * item.cantidad;
+      const priceWithoutTax = priceWithTax / (1 + taxFactor);
+      const tax = priceWithTax - priceWithoutTax;
+
+      return tax;
     },
 
+    // Método para calcular el subtotal (sin impuesto)
     calculateSubtotal() {
+      const taxFactor = 0.15;
+
       return this.cartItems
-        .reduce((sum, item) => sum + item.precio_venta * item.cantidad, 0)
+        .reduce((sum, item) => {
+          // Precio total con impuesto
+          const totalWithTax = item.precio_venta * item.cantidad;
+
+          // Precio sin impuesto
+          const totalWithoutTax = totalWithTax / (1 + taxFactor);
+
+          return sum + totalWithoutTax;
+        }, 0)
         .toFixed(2);
     },
 
+    // Método para calcular el total de impuestos
     calculateTotalTax() {
       return this.cartItems
         .reduce((sum, item) => sum + this.calculateTax(item), 0)
         .toFixed(2);
     },
 
+    // Método para calcular el total (con impuesto)
     calculateTotal() {
-      const subtotal = parseFloat(this.calculateSubtotal());
-      const tax = parseFloat(this.calculateTotalTax());
-      return (subtotal + tax).toFixed(2);
+      // Simplemente sumamos el precio total de cada ítem
+      return this.cartItems
+        .reduce((sum, item) => sum + item.precio_venta * item.cantidad, 0)
+        .toFixed(2);
     },
 
+    // Método para calcular el cambio
     calculateChangeAmount() {
       if (this.cashReceived === null) return "0.00";
       const total = parseFloat(this.calculateTotal());
@@ -1094,48 +1155,55 @@ mapProductData(item) {
 
     // Clientes
     async fetchCustomers() {
-  try {
-    console.log('Intentando cargar clientes desde:', 'http://localhost:3005/api/v1/cliente');
-    const response = await fetch('http://localhost:3005/api/v1/cliente');
-    
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
-    }
-    
-    const data = await response.json();
-    console.log('Clientes recibidos:', data);
-    this.customers = data;
-    
-    if (!this.customers.some(c => c.nombre === 'Consumidor final')) {
-      this.customers.unshift({
-        id: 0,
-        nombre: 'Consumidor final',
-        rtn: '',
-        telefono: '',
-        direccion: 'Ciudad',
-        empresaId: 0,
-        estado: 1
-      });
-    }
-    
-    this.filteredCustomers = [...this.customers].slice(0, 5);
-  } catch (error) {
-    console.error('Error al cargar clientes:', error);
-    this.customers = [
-      {
-        id: 0,
-        nombre: 'Consumidor final',
-        rtn: '',
-        telefono: '',
-        direccion: 'Ciudad',
-        empresaId: 0,
-        estado: 1
+      try {
+        console.log(
+          "Intentando cargar clientes desde:",
+          "http://localhost:3005/api/v1/cliente"
+        );
+        const response = await fetch("http://localhost:3005/api/v1/cliente");
+
+        if (!response.ok) {
+          throw new Error(
+            `Error HTTP: ${response.status} - ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        console.log("Clientes recibidos:", data);
+        this.customers = data;
+
+        if (!this.customers.some((c) => c.nombre === "Consumidor final")) {
+          this.customers.unshift({
+            id: 0,
+            nombre: "Consumidor final",
+            rtn: "",
+            telefono: "",
+            direccion: "Ciudad",
+            empresaId: 0,
+            estado: 1,
+          });
+        }
+
+        this.filteredCustomers = [...this.customers].slice(0, 5);
+      } catch (error) {
+        console.error("Error al cargar clientes:", error);
+        this.customers = [
+          {
+            id: 0,
+            nombre: "Consumidor final",
+            rtn: "",
+            telefono: "",
+            direccion: "Ciudad",
+            empresaId: 0,
+            estado: 1,
+          },
+        ];
+        this.filteredCustomers = [...this.customers];
+        alert(
+          "Error al cargar clientes. Se está usando un cliente por defecto."
+        );
       }
-    ];
-    this.filteredCustomers = [...this.customers];
-    alert('Error al cargar clientes. Se está usando un cliente por defecto.');
-  }
-},
+    },
 
     /*async fetchCustomers() {
       try {
@@ -1198,65 +1266,67 @@ mapProductData(item) {
 
     // Nuevo cliente
     cancelNewCustomer() {
-  this.showNewCustomerModal = false;
-  this.newCustomer = {
-    nombre: '',
-    rtn: '',
-    telefono: '',
-    direccion: '',
-    correo: ''
-  };
-},
+      this.showNewCustomerModal = false;
+      this.newCustomer = {
+        nombre: "",
+        rtn: "",
+        telefono: "",
+        direccion: "",
+        correo: "",
+      };
+    },
     async saveNewCustomer() {
-  if (!this.newCustomer.nombre || !this.newCustomer.telefono) {
-    alert('Nombre y teléfono son campos obligatorios');
-    return;
-  }
-  
-  try {
-    const response = await fetch('http://localhost:3005/api/v1/cliente', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        nombre: this.newCustomer.nombre,
-        rtn: this.newCustomer.rtn || null,
-        telefono: this.newCustomer.telefono,
-        direccion: this.newCustomer.direccion || 'Ciudad',
-        correo: this.newCustomer.correo || '',
-        empresaId: 0,
-        estado: 1
-      })
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error HTTP: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    this.selectedCustomer = data;
-    this.customers.unshift(this.selectedCustomer);
-    this.showNewCustomerModal = false;
-    this.newCustomer = {
-      nombre: '',
-      rtn: '',
-      telefono: '',
-      direccion: '',
-      correo: ''
-    };
-    
-    this.filterCustomers();
-  } catch (error) {
-    console.error('Error al guardar cliente:', error);
-    let errorMsg = 'Error al guardar el cliente';
-    if (error.message) {
-      errorMsg += `: ${error.message}`;
-    }
-    alert(errorMsg);
-  }
-},
+      if (!this.newCustomer.nombre || !this.newCustomer.telefono) {
+        alert("Nombre y teléfono son campos obligatorios");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3005/api/v1/cliente", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nombre: this.newCustomer.nombre,
+            rtn: this.newCustomer.rtn || null,
+            telefono: this.newCustomer.telefono,
+            direccion: this.newCustomer.direccion || "Ciudad",
+            correo: this.newCustomer.correo || "",
+            empresaId: 0,
+            estado: 1,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || `Error HTTP: ${response.status}`
+          );
+        }
+
+        const data = await response.json();
+        this.selectedCustomer = data;
+        this.customers.unshift(this.selectedCustomer);
+        this.showNewCustomerModal = false;
+        this.newCustomer = {
+          nombre: "",
+          rtn: "",
+          telefono: "",
+          direccion: "",
+          correo: "",
+        };
+
+        this.filterCustomers();
+      } catch (error) {
+        console.error("Error al guardar cliente:", error);
+        let errorMsg = "Error al guardar el cliente";
+        if (error.message) {
+          errorMsg += `: ${error.message}`;
+        }
+        alert(errorMsg);
+      }
+    },
     /*async saveNewCustomer() {
       if (!this.newCustomer.nombre || !this.newCustomer.telefono) {
         alert("Nombre y teléfono son campos obligatorios");

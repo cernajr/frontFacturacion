@@ -773,7 +773,7 @@ const headers = [
   },
   {
     title: "Precio",
-    key: "precio",
+    key: "precio_venta",
   },
   {
     title: "Estado",
@@ -787,8 +787,8 @@ const headers = [
 ];
 
 const estadoOptions = [
-  { descripcion: "Activo", value: true },
-  { descripcion: "Inactivo", value: false },
+  { descripcion: "Activo", value: 1 },
+  { descripcion: "Inactivo", value: 0 },
 ];
 
 const rules = {
@@ -808,7 +808,7 @@ const rules = {
 };
 
 const resolveStatusVariant = (estado) => {
-  if (estado === true) return { color: "success", text: "Activo" };
+  if (estado === 1) return { color: "success", text: "Activo" };
   return { color: "error", text: "Inactivo" };
 };
 
