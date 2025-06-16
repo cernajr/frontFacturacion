@@ -802,7 +802,13 @@ const rules = {
   codigo: (v) =>
     /^[a-zA-Z0-9\-_]{2,20}$/.test(v) ||
     "Ingrese un código válido (letras, números y guiones)",
-  precio: (v) => v > 0 || "El precio debe ser mayor que cero",
+    precio: (v) => {
+  if (!v) return "Este campo es requerido";
+  if (isNaN(parseFloat(v))) return "Ingrese un valor numérico";
+  if (parseFloat(v) <= 0) return "El precio debe ser mayor que 0";
+  if (parseFloat(v) > 100000) return "El precio excede el máximo permitido";
+  return true;
+},
   stock: (v) => v >= 0 || "El stock no puede ser negativo",
   estadoRequired: (v) => v !== undefined || "Este campo es requerido",
 };

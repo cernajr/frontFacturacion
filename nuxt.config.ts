@@ -26,5 +26,14 @@ export default defineNuxtConfig({
       apiBase: "http://localhost:3005/api/v1",
     },
   },
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'http://localhost:3005/api/v1',
+        changeOrigin: true
+      }
+    }
+  }
+
 });
 

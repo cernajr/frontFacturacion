@@ -1,83 +1,92 @@
 <template>
   <v-layout class="rounded rounded-md">
-    <v-navigation-drawer expand-on-hover rail>
-      <v-list>
-        <v-list-item
-          :prepend-avatar="logoImage"
-          subtitle="Rapido y Eficaz"
-          title="Facturalize"
-        ></v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-
-      <v-list density="compact" nav>
-        <v-list-item
-          prepend-icon="mdi-home"
-          title="Home"
-          to="/home"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-cash-register"
-          title="Caja"
-          to="/caja"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-account-multiple"
-          title="Clientes"
-          to="/clientes"
-        ></v-list-item>
-        <!--<v-list-item
-          prepend-icon="mdi-account"
-          title="Colaboradores"
-          to="/colaboradores"
-        ></v-list-item>-->
-        <v-list-item
-          prepend-icon="mdi-package-variant"
-          title="Inventario"
-          to="/inventario"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-chart-bar"
-          title="Reportes"
-          to="/reporte"
-        ></v-list-item>
-        <v-list-group value="Parametros">
-          <template v-slot:activator="{ props }">
-            <v-list-item
-              v-bind="props"
-              prepend-icon="mdi-cog"
-              title="Parámetros"
-              class="parameter-group"
-            ></v-list-item>
-          </template>
-
+    <v-navigation-drawer expand-on-hover rail class="d-flex flex-column">
+      <div>
+        <v-list>
           <v-list-item
-            v-for="subItem in parameterMenuItems"
-            :key="subItem.title"
-            :prepend-icon="subItem.icon"
-            :title="subItem.title"
-            :to="subItem.to"
-            :value="subItem.title.toLowerCase()"
-            class="parameter-item"
-          >
-            <template v-slot:prepend>
-              <v-icon size="20" class="me-2">{{ subItem.icon }}</v-icon>
-            </template>
-            <template v-slot:title>
-              <span class="text-truncate" style="max-width: 180px">{{
-                subItem.title
-              }}</span>
-            </template>
-          </v-list-item>
-        </v-list-group>
+            :prepend-avatar="logoImage"
+            subtitle="Rapido y Eficaz"
+            title="Facturalize"
+          ></v-list-item>
+        </v-list>
 
-        <!--<v-list-item
-          prepend-icon="mdi-logout"
-          title="Cerrar Sesión"
-          to="logout"
-        ></v-list-item>-->
-      </v-list>
+        <v-divider></v-divider>
+
+        <v-list density="compact" nav>
+          <v-list-item
+            prepend-icon="mdi-home"
+            title="Home"
+            to="/home"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-cash-register"
+            title="Caja"
+            to="/caja"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-account-multiple"
+            title="Clientes"
+            to="/clientes"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-account"
+            title="Colaboradores"
+            to="/colaboradores"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-package-variant"
+            title="Inventario"
+            to="/inventario"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-chart-bar"
+            title="Reportes"
+            to="/reporte"
+          ></v-list-item>
+          <v-list-group value="Parametros">
+            <template v-slot:activator="{ props }">
+              <v-list-item
+                v-bind="props"
+                prepend-icon="mdi-cog"
+                title="Parámetros"
+                class="parameter-group"
+              ></v-list-item>
+            </template>
+
+            <v-list-item
+              v-for="subItem in parameterMenuItems"
+              :key="subItem.title"
+              :prepend-icon="subItem.icon"
+              :title="subItem.title"
+              :to="subItem.to"
+              :value="subItem.title.toLowerCase()"
+              class="parameter-item"
+            >
+              <template v-slot:prepend>
+                <v-icon size="20" class="me-2">{{ subItem.icon }}</v-icon>
+              </template>
+              <template v-slot:title>
+                <span class="text-truncate" style="max-width: 180px">{{
+                  subItem.title
+                }}</span>
+              </template>
+            </v-list-item>
+          </v-list-group>
+        </v-list>
+      </div>
+
+      <!-- Botón de cerrar sesión al final -->
+      <div class="mt-auto">
+        <v-divider></v-divider>
+        <v-list density="compact">
+          <v-list-item
+            prepend-icon="mdi-logout"
+            title="Cerrar Sesión"
+            @click="logout"
+            class="logout-item"
+          ></v-list-item>
+        </v-list>
+      </div>
     </v-navigation-drawer>
 
     <v-app-bar title=""
@@ -107,6 +116,20 @@ import { ref } from "vue";
 import logoImage from "@/assets/logo.png";
 
 const theme = useTheme();
+
+// Función para cerrar sesión
+const { $auth } = useNuxtApp();
+
+const logout = async () => {
+  try {
+    await $auth.logout();
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
+    // Forzar limpieza y redirección si hay error
+    $auth.removeToken();
+    await navigateTo('/login');
+  }
+};
 
 function toggleTheme() {
   const newTheme = theme.global.current.value.dark
@@ -176,6 +199,19 @@ onMounted(() => {
 }
 
 :deep(.v-list-group__items .v-icon) {
-  opacity: 0.8;
+  opacity: 0.8;
+}
+
+/* Estilos para el botón de logout */
+:deep(.logout-item) {
+  color: rgb(var(--v-theme-error)) !important;
+}
+
+:deep(.logout-item:hover) {
+  background-color: rgba(var(--v-theme-error), 0.1) !important;
+}
+
+:deep(.logout-item .v-icon) {
+  color: rgb(var(--v-theme-error)) !important;
 }
 </style>
