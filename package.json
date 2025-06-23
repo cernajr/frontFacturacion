@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@nuxt/icon": "^1.14.0",
     "axios": "^1.8.4",
     "chart.js": "^4.4.8",
     "echarts": "^5.6.0",
