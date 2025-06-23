@@ -35,8 +35,8 @@
 
       <v-card-text>
         <v-tabs v-model="activeTab" bg-color="transparent" centered>
-          <v-tab value="activos" class="text-primary font-weight-bold">Colaboradores Activos</v-tab>
-          <v-tab value="inactivos" class="text-grey-darken-1 font-weight-bold">Colaboradores Inactivos</v-tab>
+          <v-tab value="activos" class="text-primary font-weight-bold">Colaboradores Habilitados</v-tab>
+          <v-tab value="inactivos" class="text-grey-darken-1 font-weight-bold">Colaboradores Deshabilitados</v-tab>
         </v-tabs>
         
         <v-window v-model="activeTab" class="mt-4">
@@ -533,13 +533,91 @@ const dialogEditar = ref(false);
 const dialogProcess = ref(false);
 const dialogDetalles = ref(false);
 
-// Computed properties para filtrar colaboradores activos e inactivos
+// Reemplazar estas funciones en tu código existente
+
+const handleDisable = async () => {
+  dialogProcess.value = true;
+  loadingMessage.value = "Deshabilitando colaborador...";
+  isConfirmDisableDialogVisible.value = false;
+  
+  try {
+    const response = await $fetch(
+      `${runtimeConfig.public.apiBase}/usuario/disable/${actionItemId.value}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+
+    if (response.success) {
+      snackbarColor.value = "success";
+      snackbarMessage.value = "Colaborador deshabilitado exitosamente";
+      isSnackbarVisible.value = true;
+      
+      // Recargar datos y cambiar a tab de inactivos
+      await getData();
+      activeTab.value = "inactivos";
+    } else {
+      throw new Error(response.message || 'Error al deshabilitar');
+    }
+  } catch (e) {
+    console.error('Error al deshabilitar:', e);
+    snackbarColor.value = "error";
+    snackbarMessage.value = e.data?.message || "Error al deshabilitar el colaborador";
+    isSnackbarVisible.value = true;
+  } finally {
+    dialogProcess.value = false;
+    actionItemId.value = null;
+  }
+};
+
+const handleEnable = async () => {
+  dialogProcess.value = true;
+  loadingMessage.value = "Habilitando colaborador...";
+  isConfirmEnableDialogVisible.value = false;
+  
+  try {
+    const response = await $fetch(
+      `${runtimeConfig.public.apiBase}/usuario/enable/${actionItemId.value}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+
+    if (response.success) {
+      snackbarColor.value = "success";
+      snackbarMessage.value = "Colaborador habilitado exitosamente";
+      isSnackbarVisible.value = true;
+      
+      // Recargar datos y cambiar a tab de activos
+      await getData();
+      activeTab.value = "activos";
+    } else {
+      throw new Error(response.message || 'Error al habilitar');
+    }
+  } catch (e) {
+    console.error('Error al habilitar:', e);
+    snackbarColor.value = "error";
+    snackbarMessage.value = e.data?.message || "Error al habilitar el colaborador";
+    isSnackbarVisible.value = true;
+  } finally {
+    dialogProcess.value = false;
+    actionItemId.value = null;
+  }
+};
+
+// También arreglar los computed properties - agregar estos si no los tienes
 const colaboradoresActivos = computed(() => {
-  return datos.value.filter(item => item.estado === 1);
+  return datos.value.filter(item => item.estado === 1 || item.estado === true);
 });
 
 const colaboradoresInactivos = computed(() => {
-  return datos.value.filter(item => item.estado === 0);
+  return datos.value.filter(item => item.estado === 0 || item.estado === false);
 });
 
 // Datos para el modal de detalles
@@ -793,69 +871,7 @@ const enableItem = (id) => {
   isConfirmEnableDialogVisible.value = true;
 };
 
-const handleDisable = async () => {
-  dialogProcess.value = true;
-  loadingMessage.value = "Deshabilitando colaborador...";
-  isConfirmDisableDialogVisible.value = false;
-  
-  try {
-    const response = await $fetch(
-      `${runtimeConfig.public.apiBase}/usuario/disable/${actionItemId.value}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }
-    );
 
-    snackbarColor.value = "success";
-    snackbarMessage.value = "Colaborador deshabilitado exitosamente";
-    isSnackbarVisible.value = true;
-    await getData();
-    activeTab.value = "inactivos"; // Cambiar a la pestaña de inactivos
-  } catch (e) {
-    snackbarColor.value = "error";
-    snackbarMessage.value =
-      e.data?.message || "Error al deshabilitar el colaborador";
-    isSnackbarVisible.value = true;
-  } finally {
-    dialogProcess.value = false;
-    closeDialog();
-  }
-};
-
-const handleEnable = async () => {
-  dialogProcess.value = true;
-  loadingMessage.value = "Habilitando colaborador...";
-  isConfirmEnableDialogVisible.value = false;
-  
-  try {
-    const response = await $fetch(
-      `${runtimeConfig.public.apiBase}/usuario/enable/${actionItemId.value}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }
-    );
-
-    snackbarColor.value = "success";
-    snackbarMessage.value = "Colaborador habilitado exitosamente";
-    isSnackbarVisible.value = true;
-    await getData();
-    activeTab.value = "activos"; // Cambiar a la pestaña de activos
-  } catch (e) {
-    snackbarColor.value = "error";
-    snackbarMessage.value =
-      e.data?.message || "Error al habilitar el colaborador";
-    isSnackbarVisible.value = true;
-  } finally {
-    dialogProcess.value = false;
-    closeDialog();
-  }
-};
 
 const togglePasswordEdit = () => {
   isNewPassword.value = true;

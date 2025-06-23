@@ -82,7 +82,7 @@
                 <v-divider></v-divider>
                 <v-card-actions class="justify-center pa-4">
                   <small class="text--secondary">
-                    © 2024 Facturalize - Sistema de Facturación
+                    © 2025 Facturalize - Sistema de Facturación
                   </small>
                 </v-card-actions>
               </v-card>
