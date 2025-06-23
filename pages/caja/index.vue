@@ -29,8 +29,6 @@
             @click="closeCashRegister">
             Cerrar Caja
           </v-btn>
-          <v-text-field v-model="searchQuery" prepend-inner-icon="mdi-magnify" placeholder="Buscar..."
-            variant="outlined" density="compact" hide-details style="max-width: 250px" @input="searchProducts" />
         </div>
       </v-col>
     </v-row>
@@ -151,8 +149,8 @@
         </v-card-title>
         <v-divider />
         <v-card-text class="pt-6">
-          <v-text-field v-model.number="initialCashAmount" label="Monto inicial en efectivo" type="number" min="0"
-            step="0.01" prepend-icon="mdi-cash" variant="outlined" suffix="L" />
+          <v-text-field v-model.number="initialCashAmount" label="Monto inicial en efectivo" type="number" 
+            step="0.01" prepend-icon="mdi-cash" variant="outlined" suffix="L" placeholder="Minimo L.500"/>
           <v-textarea v-model="openCashComments" label="Comentarios (opcional)"
             placeholder="Comentarios sobre apertura de caja..." variant="outlined" rows="3" />
         </v-card-text>

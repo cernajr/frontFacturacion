@@ -14,69 +14,30 @@
         <!-- Selector de tipo de reporte y filtros de fecha -->
         <v-row>
           <v-col cols="12" md="4">
-            <v-select
-              v-model="selectedReport"
-              :items="reportTypes"
-              label="Tipo de Reporte"
-              item-title="label"
-              item-value="value"
-              @update:model-value="changeReportType"
-              :disabled="isLoading"
-            ></v-select>
+            <v-select v-model="selectedReport" :items="reportTypes" label="Tipo de Reporte" item-title="label"
+              item-value="value" @update:model-value="changeReportType" :disabled="isLoading"></v-select>
           </v-col>
           <v-col cols="12" md="3">
-            <v-menu
-              v-model="dateMenuStart"
-              :close-on-content-click="false"
-              location="end"
-            >
+            <v-menu v-model="dateMenuStart" :close-on-content-click="false" location="end">
               <template v-slot:activator="{ props }">
-                <v-text-field
-                  v-model="dateStart"
-                  label="Fecha Inicio"
-                  prepend-inner-icon="mdi-calendar"
-                  v-bind="props"
-                  readonly
-                  :disabled="isLoading"
-                ></v-text-field>
+                <v-text-field v-model="dateStart" label="Fecha Inicio" prepend-inner-icon="mdi-calendar" v-bind="props"
+                  readonly :disabled="isLoading"></v-text-field>
               </template>
-              <v-date-picker
-                v-model="dateStart"
-                @update:model-value="dateMenuStart = false"
-              ></v-date-picker>
+              <v-date-picker v-model="dateStart" @update:model-value="dateMenuStart = false"></v-date-picker>
             </v-menu>
           </v-col>
           <v-col cols="12" md="3">
-            <v-menu
-              v-model="dateMenuEnd"
-              :close-on-content-click="false"
-              location="end"
-            >
+            <v-menu v-model="dateMenuEnd" :close-on-content-click="false" location="end">
               <template v-slot:activator="{ props }">
-                <v-text-field
-                  v-model="dateEnd"
-                  label="Fecha Fin"
-                  prepend-inner-icon="mdi-calendar"
-                  v-bind="props"
-                  readonly
-                  :disabled="isLoading"
-                ></v-text-field>
+                <v-text-field v-model="dateEnd" label="Fecha Fin" prepend-inner-icon="mdi-calendar" v-bind="props"
+                  readonly :disabled="isLoading"></v-text-field>
               </template>
-              <v-date-picker
-                v-model="dateEnd"
-                @update:model-value="dateMenuEnd = false"
-              ></v-date-picker>
+              <v-date-picker v-model="dateEnd" @update:model-value="dateMenuEnd = false"></v-date-picker>
             </v-menu>
           </v-col>
           <v-col cols="12" md="2" class="d-flex align-center">
-            <v-btn
-              variant="tonal"
-              color="primary"
-              @click="generateReport"
-              prepend-icon="mdi-file-chart"
-              :loading="isLoading"
-              :disabled="isLoading"
-            >
+            <v-btn variant="tonal" color="primary" @click="generateReport" prepend-icon="mdi-file-chart"
+              :loading="isLoading" :disabled="isLoading">
               Generar
             </v-btn>
           </v-col>
@@ -85,51 +46,28 @@
         <!-- Caja de búsqueda -->
         <v-row>
           <v-col cols="12" class="d-flex justify-end">
-            <v-text-field
-              v-model="search"
-              placeholder="Buscar ..."
-              append-inner-icon="mdi-magnify"
-              single-line
-              hide-details
-              density="compact"
-              variant="outlined"
-              style="max-width: 300px"
-              :disabled="isLoading || !dataLoaded"
-            />
+            <v-text-field v-model="search" placeholder="Buscar ..." append-inner-icon="mdi-magnify" single-line
+              hide-details density="compact" variant="outlined" style="max-width: 300px"
+              :disabled="isLoading || !dataLoaded" />
           </v-col>
         </v-row>
 
         <!-- Indicador de carga -->
         <v-row v-if="isLoading">
           <v-col cols="12" class="d-flex justify-center">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
           </v-col>
         </v-row>
 
         <!-- Botones de descarga -->
         <v-row v-if="dataLoaded && !isLoading">
           <v-col cols="12" class="d-flex justify-start gap-2">
-            <v-btn
-              variant="outlined"
-              color="success"
-              prepend-icon="mdi-microsoft-excel"
-              @click="downloadExcel"
-              :loading="isDownloadingExcel"
-              :disabled="isDownloadingExcel || isDownloadingPdf"
-            >
+            <v-btn variant="outlined" color="success" prepend-icon="mdi-microsoft-excel" @click="downloadExcel"
+              :loading="isDownloadingExcel" :disabled="isDownloadingExcel || isDownloadingPdf">
               Exportar Excel
             </v-btn>
-            <v-btn
-              variant="outlined"
-              color="error"
-              prepend-icon="mdi-file-pdf"
-              @click="downloadPdf"
-              :loading="isDownloadingPdf"
-              :disabled="isDownloadingPdf || isDownloadingExcel"
-            >
+            <v-btn variant="outlined" color="error" prepend-icon="mdi-file-pdf" @click="downloadPdf"
+              :loading="isDownloadingPdf" :disabled="isDownloadingPdf || isDownloadingExcel">
               Exportar PDF
             </v-btn>
           </v-col>
@@ -138,11 +76,7 @@
         <!-- Mensaje de no hay datos -->
         <v-row v-if="dataLoaded && !isLoading && reportData.length === 0">
           <v-col cols="12" class="d-flex justify-center">
-            <v-alert
-              type="info"
-              variant="tonal"
-              class="w-100"
-            >
+            <v-alert type="info" variant="tonal" class="w-100">
               No se encontraron datos para los criterios seleccionados.
             </v-alert>
           </v-col>
@@ -151,71 +85,39 @@
         <!-- Tabla de datos del reporte -->
         <v-row v-if="dataLoaded && !isLoading && reportData.length > 0">
           <v-col cols="12">
-            <v-data-table
-              v-if="selectedReport === 'inventory'"
-              :headers="inventoryHeaders"
-              :items="reportData"
-              :search="search"
-              :loading="isLoading"
-            >
+            <v-data-table v-if="selectedReport === 'inventory'" :headers="inventoryHeaders" :items="reportData"
+              :search="search" :loading="isLoading">
               <template #[`item.stock`]="{ item }">
-                <v-chip
-                  :color="resolveStockStatus(item.stock, item.stockMinimo).color"
-                  class="font-weight-medium"
-                  size="small"
-                >
+                <v-chip :color="resolveStockStatus(item.stock, item.stockMinimo).color" class="font-weight-medium"
+                  size="small">
                   {{ item.stock }}
                 </v-chip>
               </template>
             </v-data-table>
 
-            <v-data-table
-              v-else-if="selectedReport === 'clients'"
-              :headers="clientHeaders"
-              :items="reportData"
-              :search="search"
-              :loading="isLoading"
-            >
+            <v-data-table v-else-if="selectedReport === 'clients'" :headers="clientHeaders" :items="reportData"
+              :search="search" :loading="isLoading">
               <template #[`item.montoTotal`]="{ item }">
                 {{ formatCurrency(item.montoTotal) }}
               </template>
             </v-data-table>
 
-            <v-data-table
-              v-else-if="selectedReport === 'invoices'"
-              :headers="invoiceHeaders"
-              :items="reportData"
-              :search="search"
-              :loading="isLoading"
-            >
+            <v-data-table v-else-if="selectedReport === 'invoices'" :headers="invoiceHeaders" :items="reportData"
+              :search="search" :loading="isLoading">
               <template #[`item.total`]="{ item }">
                 {{ formatCurrency(item.total) }}
               </template>
               <template #[`item.estado`]="{ item }">
-                <v-chip
-                  :color="resolveInvoiceStatus(item.estado).color"
-                  class="font-weight-medium"
-                  size="small"
-                >
+                <v-chip :color="resolveInvoiceStatus(item.estado).color" class="font-weight-medium" size="small">
                   {{ resolveInvoiceStatus(item.estado).text }}
                 </v-chip>
               </template>
               <template #[`item.actions`]="{ item }">
                 <div class="d-flex gap-1">
-                  <v-btn
-                    icon="mdi-eye"
-                    size="small"
-                    variant="text"
-                    color="info"
-                    @click="viewInvoiceDetails(item.id)"
-                  ></v-btn>
-                  <v-btn
-                    icon="mdi-printer"
-                    size="small"
-                    variant="text"
-                    color="primary"
-                    @click="printInvoice(item.id)"
-                  ></v-btn>
+                  <v-btn icon="mdi-eye" size="small" variant="text" color="info"
+                    @click="viewInvoiceDetails(item.id)"></v-btn>
+                  <v-btn icon="mdi-printer" size="small" variant="text" color="primary"
+                    @click="printInvoice(item.id)"></v-btn>
                 </div>
               </template>
             </v-data-table>
@@ -225,12 +127,7 @@
     </v-card>
 
     <!-- Snackbar de notificaciones -->
-    <v-snackbar
-      v-model="isSnackbarVisible"
-      :color="snackbarColor"
-      timeout="3000"
-      location="top"
-    >
+    <v-snackbar v-model="isSnackbarVisible" :color="snackbarColor" timeout="3000" location="top">
       {{ snackbarMessage }}
     </v-snackbar>
 
@@ -241,40 +138,20 @@
         <v-card-text v-if="selectedInvoice">
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                v-model="selectedInvoice.numeroFactura"
-                label="Número de Factura"
-                readonly
-                variant="outlined"
-                density="comfortable"
-              ></v-text-field>
+              <v-text-field v-model="selectedInvoice.numeroFactura" label="Número de Factura" readonly
+                variant="outlined" density="comfortable"></v-text-field>
             </v-col>
             <v-col cols="6">
-              <v-text-field
-                v-model="selectedInvoice.fecha"
-                label="Fecha"
-                readonly
-                variant="outlined"
-                density="comfortable"
-              ></v-text-field>
+              <v-text-field v-model="selectedInvoice.fecha" label="Fecha" readonly variant="outlined"
+                density="comfortable"></v-text-field>
             </v-col>
             <v-col cols="6">
-              <v-text-field
-                v-model="selectedInvoice.cliente"
-                label="Cliente"
-                readonly
-                variant="outlined"
-                density="comfortable"
-              ></v-text-field>
+              <v-text-field v-model="selectedInvoice.cliente" label="Cliente" readonly variant="outlined"
+                density="comfortable"></v-text-field>
             </v-col>
             <v-col cols="6">
-              <v-text-field
-                v-model="selectedInvoice.total"
-                label="Total"
-                readonly
-                variant="outlined"
-                density="comfortable"
-              ></v-text-field>
+              <v-text-field v-model="selectedInvoice.total" label="Total" readonly variant="outlined"
+                density="comfortable"></v-text-field>
             </v-col>
           </v-row>
 
@@ -336,12 +213,7 @@
       <v-card color="primary" width="300">
         <v-card-text class="pt-3">
           {{ downloadingMessage }}
-          <v-progress-linear
-            indeterminate
-            bg-color="rgba(var(--v-theme-surface), 0.1)"
-            :height="8"
-            class="mb-0 mt-4"
-          />
+          <v-progress-linear indeterminate bg-color="rgba(var(--v-theme-surface), 0.1)" :height="8" class="mb-0 mt-4" />
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -560,26 +432,26 @@ const invoiceHeaders = [
 onMounted(() => {
   // Inicializar fechas
   const today = new Date();
-  
+
   // Inicializar fecha fin con la fecha actual
   const endDate = new Date(today);
   dateEnd.value = formatDateForPicker(endDate);
-  
+
   // Inicializar fecha inicio con el primer día del mes actual
   const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
   dateStart.value = formatDateForPicker(startDate);
-  
+
   // Cargar categorías de productos
   getProductCategories();
-  
+
   // Agregar event listener para impresión solo en el cliente
   if (isBrowser) {
-    window.addEventListener('beforeprint', function() {
+    window.addEventListener('beforeprint', function () {
       if (document.body) {
         document.body.setAttribute('data-print-date', new Date().toLocaleString());
       }
     });
-    
+
     // Generar el reporte inicial automáticamente
     generateReport();
   }
@@ -602,7 +474,7 @@ const formatCurrency = (value) => {
 // Formatear fecha para la factura
 const formatInvoiceDate = (dateString) => {
   if (!dateString) return 'N/A';
-  
+
   try {
     const date = new Date(dateString);
     return `${date.toLocaleDateString('es-HN')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
@@ -615,12 +487,12 @@ const formatInvoiceDate = (dateString) => {
 // Calcular impuesto para un elemento de factura
 const calculateItemTax = (item) => {
   if (!item || !item.precioUnitario || !item.cantidad) return 0;
-  
+
   // Suponiendo que el impuesto es del 15%
   const taxRate = 0.15;
   const subtotal = item.precioUnitario * item.cantidad;
   const tax = subtotal * taxRate;
-  
+
   return tax;
 };
 
@@ -663,7 +535,9 @@ const getProductCategories = async () => {
     });
 
     productCategories.value = response;
+    console.log("Categorías cargadas:", productCategories.value);
   } catch (error) {
+    console.error("Error al cargar categorías:", error);
     snackbarColor.value = "error";
     snackbarMessage.value = error.data?.message || "Error al cargar las categorías";
     isSnackbarVisible.value = true;
@@ -679,7 +553,7 @@ const generateReport = async () => {
   console.log("Iniciando generación de reporte...");
   console.log("Tipo de reporte:", selectedReport.value);
   console.log("Fechas:", dateStart.value, dateEnd.value);
- 
+
   if (!dateStart.value || !dateEnd.value) {
     console.log("Fechas no seleccionadas");
     snackbarColor.value = "error";
@@ -687,41 +561,41 @@ const generateReport = async () => {
     isSnackbarVisible.value = true;
     return;
   }
- 
+
   isLoading.value = true;
   dataLoaded.value = false;
- 
+
   try {
     console.log("Construyendo endpoint y parámetros...");
-    
+
     // Endpoints directos a las tablas
     let endpoint;
     let params = new URLSearchParams();
-    
+
     params.append('fechaInicio', dateStart.value);
     params.append('fechaFin', dateEnd.value);
-    
+
     // Mapeo de endpoints según el tipo de reporte
     switch (selectedReport.value) {
       case 'inventory':
         endpoint = '/producto'; // Endpoint de productos para inventario
         break;
-        
+
       case 'clients':
         endpoint = '/cliente'; // Endpoint de clientes
         break;
-        
+
       case 'invoices':
         endpoint = '/factura'; // Endpoint de facturas
         break;
-        
+
       default:
         endpoint = '/producto';
     }
-    
+
     const url = `${runtimeConfig.public.apiBase}${endpoint}?${params.toString()}`;
     console.log("URL completa:", url);
-    
+
     console.log("Realizando petición...");
     const response = await $fetch(url, {
       method: "GET",
@@ -729,60 +603,133 @@ const generateReport = async () => {
         "Content-Type": "application/json",
       },
     });
-    
+
     console.log("Respuesta recibida:", response);
-    
+
     // Debug: Mostrar estructura de la respuesta para entender mejor los datos
     if (Array.isArray(response) && response.length > 0) {
       logObjectStructure(response[0], `Primer elemento de ${selectedReport.value}`);
     }
-    
+
     // Procesamiento específico según el tipo de reporte
     let processedData = [];
-    
+
     if (Array.isArray(response)) {
       // Transformar los datos según el tipo de reporte para que coincidan con lo esperado
       switch (selectedReport.value) {
+        // ✅ Modificar el caso 'inventory' en generateReport:
         case 'inventory':
+          // Asegurar que las categorías estén cargadas
+          if (productCategories.value.length === 0) {
+            await getProductCategories();
+          }
+
+          // Crear mapa de categorías
+          let categoriesMap = {};
+          productCategories.value.forEach(cat => {
+            categoriesMap[cat.id] = cat.descripcion || cat.nombre || cat.description;
+          });
+
+          console.log("Mapa de categorías:", categoriesMap);
+
           processedData = response.map((item, index) => {
-            // Verificar y mostrar todos los posibles campos de código
-            console.log("Posibles campos de código:", {
-              codigo: item.codigo,
-              codigoProducto: item.codigoProducto,
-              code: item.code,
-              id: item.id
-            });
-            
+            // Obtener nombre de categoría
+            let categoriaNombre = 'Sin categoría';
+
+            // Verificar diferentes formas de obtener la categoría
+            if (item.Categoria && item.Categoria.descripcion) {
+              categoriaNombre = item.Categoria.descripcion;
+            } else if (item.Categoria && item.Categoria.nombre) {
+              categoriaNombre = item.Categoria.nombre;
+            } else if (item.categoria) {
+              categoriaNombre = item.categoria;
+            } else if (item.categoriaId && categoriesMap[item.categoriaId]) {
+              categoriaNombre = categoriesMap[item.categoriaId];
+            } else if (item.categoria_id && categoriesMap[item.categoria_id]) {
+              categoriaNombre = categoriesMap[item.categoria_id];
+            }
+
+            console.log(`Producto ${item.nombre}: categoriaId=${item.categoriaId}, categoria="${categoriaNombre}"`);
+
+            // Formatear fecha de último ingreso
+            let ultimoIngreso = 'N/A';
+            if (item.updatedAt) {
+              try {
+                const fecha = new Date(item.updatedAt);
+                ultimoIngreso = fecha.toLocaleDateString('es-HN');
+              } catch (error) {
+                console.error("Error al formatear updatedAt:", error);
+              }
+            } else if (item.createdAt) {
+              try {
+                const fecha = new Date(item.createdAt);
+                ultimoIngreso = fecha.toLocaleDateString('es-HN');
+              } catch (error) {
+                console.error("Error al formatear createdAt:", error);
+              }
+            }
+
             return {
               nro: index + 1,
-              // Buscar código en diferentes propiedades posibles
               codigo: item.codigo || item.codigoProducto || item.code || `PROD-${item.id}` || '',
               nombre: item.nombre || '',
-              categoria: item.Categoria?.nombre || item.categoria || item.categoriaId || '',
+              categoria: categoriaNombre,
               stock: item.stock || 0,
-              stockMinimo: item.stockMinimo || 5, // Valor por defecto si no existe
-              ultimoIngreso: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : ''
+              stockMinimo: item.stockMinimo || item.stock_minimo || 5,
+              ultimoIngreso: ultimoIngreso
             };
           });
           break;
-          
+
+        // ✅ Modificar el caso 'clients' en generateReport:
         case 'clients':
-          processedData = response.map((item, index) => {
-            // Verificar si tiene facturas y su estructura
-            let facturas = [];
-            let totalFacturas = 0;
-            let montoTotal = 0;
-            
-            if (item.Facturas && Array.isArray(item.Facturas)) {
-              facturas = item.Facturas;
-              totalFacturas = facturas.length;
-              montoTotal = facturas.reduce((sum, factura) => sum + (factura.total || 0), 0);
-            } else {
-              // Si no hay array de facturas, intentar obtener datos de otras propiedades
-              totalFacturas = item.totalFacturas || 0;
-              montoTotal = item.montoTotal || 0;
+          // Obtener facturas del localStorage para calcular totales por cliente
+          const savedInvoiceHistory = localStorage.getItem('invoiceHistory')
+          let invoicesByClient = {}
+
+          if (savedInvoiceHistory) {
+            try {
+              const invoices = JSON.parse(savedInvoiceHistory)
+              invoices.forEach(invoice => {
+                const clienteId = invoice.cliente?.id || invoice.cliente?.nombre || 'consumidor_final'
+                const clienteNombre = invoice.cliente?.nombre || 'Consumidor Final'
+
+                if (!invoicesByClient[clienteId]) {
+                  invoicesByClient[clienteId] = {
+                    nombre: clienteNombre,
+                    totalFacturas: 0,
+                    montoTotal: 0
+                  }
+                }
+
+                invoicesByClient[clienteId].totalFacturas += 1
+                invoicesByClient[clienteId].montoTotal += parseFloat(invoice.totales?.total || 0)
+              })
+            } catch (error) {
+              console.error("Error al procesar facturas para clientes:", error)
             }
-            
+          }
+
+          processedData = response.map((item, index) => {
+            // Buscar datos de facturación para este cliente
+            const factureData = invoicesByClient[item.id] || invoicesByClient[item.nombre] || {}
+
+            // Combinar datos del API con datos locales
+            let totalFacturas = 0
+            let montoTotal = 0
+
+            // Datos del API (si existen)
+            if (item.Facturas && Array.isArray(item.Facturas)) {
+              totalFacturas += item.Facturas.length
+              montoTotal += item.Facturas.reduce((sum, factura) => sum + (factura.total || 0), 0)
+            }
+
+            // Datos del localStorage
+            if (factureData.totalFacturas) {
+              totalFacturas += factureData.totalFacturas
+              montoTotal += factureData.montoTotal
+            }
+
             return {
               nro: index + 1,
               nombre: item.nombre || '',
@@ -791,56 +738,56 @@ const generateReport = async () => {
               correo: item.correo || '',
               totalFacturas: totalFacturas,
               montoTotal: montoTotal
-            };
-          });
-          break;
-          
-        case 'invoices':
-          processedData = [];
-          
-          // Creamos datos de ejemplo si no hay datos o para complementar
-          if (response.length === 0) {
-            snackbarColor.value = "info";
-            snackbarMessage.value = "No se encontraron facturas reales. Mostrando ejemplos.";
-            isSnackbarVisible.value = true;
-            
-            // Datos de ejemplo para mostrar cómo se vería
-            const exampleInvoices = [
-              {
-                id: 1,
-                numeroFactura: "000-002-02-00015581",
-                fecha: new Date().toISOString(),
-                cliente: "Cliente Ejemplo 1",
-                total: 1500.25,
-                estado: "pagada"
-              },
-              {
-                id: 2,
-                numeroFactura: "000-002-02-00015582",
-                fecha: new Date(Date.now() - 86400000).toISOString(), // Ayer
-                cliente: "Cliente Ejemplo 2",
-                total: 2300.50,
-                estado: "pendiente"
-              }
-            ];
-            
-            response.push(...exampleInvoices);
-          }
-          
-          processedData = response.map((item, index) => {
-            let clienteName = '';
-            
-            // Intenta obtener el nombre del cliente de diferentes formas
-            if (item.Cliente && item.Cliente.nombre) {
-              clienteName = item.Cliente.nombre;
-            } else if (item.clienteNombre) {
-              clienteName = item.clienteNombre;
-            } else if (item.cliente) {
-              clienteName = item.cliente;
-            } else {
-              clienteName = `Cliente ID: ${item.clienteId || 'N/A'}`;
             }
-            
+          })
+          break
+
+        case 'invoices':
+          // Primero intentar obtener facturas del localStorage de caja
+          const savedHistory = localStorage.getItem('invoiceHistory')
+          let localInvoices = []
+
+          if (savedHistory) {
+            try {
+              localInvoices = JSON.parse(savedHistory)
+              console.log("Facturas del localStorage:", localInvoices)
+            } catch (error) {
+              console.error("Error al parsear facturas del localStorage:", error)
+            }
+          }
+
+          // Combinar facturas del API y del localStorage
+          let allInvoices = [...response]
+
+          // Convertir facturas del localStorage al formato esperado
+          const formattedLocalInvoices = localInvoices.map((invoice, index) => ({
+            id: `local_${index}`,
+            numeroFactura: invoice.numero,
+            fecha: invoice.fecha,
+            clienteNombre: invoice.cliente?.nombre || 'Cliente Local',
+            cliente: invoice.cliente?.nombre || 'Cliente Local',
+            total: parseFloat(invoice.totales?.total || 0),
+            estado: 'pagada',
+            // Datos adicionales para detalles
+            fullData: invoice
+          }))
+
+          // Agregar facturas locales al array
+          allInvoices = [...allInvoices, ...formattedLocalInvoices]
+
+          processedData = allInvoices.map((item, index) => {
+            let clienteName = ''
+
+            if (item.Cliente && item.Cliente.nombre) {
+              clienteName = item.Cliente.nombre
+            } else if (item.clienteNombre) {
+              clienteName = item.clienteNombre
+            } else if (item.cliente) {
+              clienteName = item.cliente
+            } else {
+              clienteName = `Cliente ID: ${item.clienteId || 'N/A'}`
+            }
+
             return {
               id: item.id,
               nro: index + 1,
@@ -848,15 +795,16 @@ const generateReport = async () => {
               fecha: item.fecha ? new Date(item.fecha).toLocaleDateString() : 'N/A',
               cliente: clienteName,
               total: item.total || 0,
-              estado: item.estado || 'pendiente'
-            };
-          });
-          break;
+              estado: item.estado || 'pagada',
+              fullData: item.fullData || item // Para detalles completos
+            }
+          })
+          break
       }
-      
+
       reportData.value = processedData;
       dataLoaded.value = true;
-      
+
       if (reportData.value.length === 0) {
         console.log("No se encontraron datos");
         snackbarColor.value = "info";
@@ -867,7 +815,7 @@ const generateReport = async () => {
       }
     } else {
       console.log("La respuesta no es un array:", response);
-      
+
       // Intentar manejar casos especiales donde la respuesta no es un array
       if (response && typeof response === 'object') {
         // Si la respuesta es un objeto, intentar convertirlo a un array
@@ -876,7 +824,7 @@ const generateReport = async () => {
           ...item,
           nro: index + 1
         }));
-        
+
         dataLoaded.value = true;
       } else {
         snackbarColor.value = "error";
@@ -887,9 +835,9 @@ const generateReport = async () => {
   } catch (error) {
     console.error("Error en la petición:", error);
     console.error("Detalles del error:", JSON.stringify(error));
-    
+
     let errorMessage = "Error al generar el reporte";
-    
+
     if (error.status === 404) {
       errorMessage = "Endpoint no encontrado. Verifique la configuración del servidor.";
     } else if (error.status === 401 || error.status === 403) {
@@ -897,11 +845,11 @@ const generateReport = async () => {
     } else if (error.status === 500) {
       errorMessage = "Error interno del servidor. Intente más tarde o contacte al administrador.";
     }
-    
+
     snackbarColor.value = "error";
     snackbarMessage.value = error.data?.message || errorMessage;
     isSnackbarVisible.value = true;
-    
+
     // Agregar datos de ejemplo si no hay datos
     if (selectedReport.value === 'inventory') {
       reportData.value = [
@@ -942,21 +890,21 @@ const downloadExcel = async () => {
     console.log("No se puede generar Excel en el servidor");
     return;
   }
- 
+
   try {
     isDownloadingExcel.value = true;
     isDownloadingDialog.value = true;
     downloadingMessage.value = "Generando archivo Excel...";
-    
+
     // Generar Excel del lado del cliente
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Crear una tabla HTML para exportar
     const tableHTML = document.createElement('table');
-    
+
     // Crear encabezados según el tipo de reporte
     const headerRow = document.createElement('tr');
-    
+
     let headers = [];
     switch (selectedReport.value) {
       case 'inventory':
@@ -969,19 +917,19 @@ const downloadExcel = async () => {
         headers = ['#', 'Número Factura', 'Fecha', 'Cliente', 'Total', 'Estado'];
         break;
     }
-    
+
     headers.forEach(header => {
       const th = document.createElement('th');
       th.textContent = header;
       headerRow.appendChild(th);
     });
-    
+
     tableHTML.appendChild(headerRow);
-    
+
     // Agregar filas de datos
     reportData.value.forEach(row => {
       const tr = document.createElement('tr');
-      
+
       // Filtrar solo las columnas que corresponden a los encabezados
       const rowValues = Object.entries(row).filter(([key]) => {
         if (selectedReport.value === 'inventory') {
@@ -993,54 +941,54 @@ const downloadExcel = async () => {
         }
         return false;
       }).map(([_, value]) => value);
-      
+
       rowValues.forEach(value => {
         const td = document.createElement('td');
         td.textContent = value;
         tr.appendChild(td);
       });
-      
+
       tableHTML.appendChild(tr);
     });
-    
+
     // Crear un elemento temporal para contener la tabla
     const tempDiv = document.createElement('div');
     tempDiv.appendChild(tableHTML);
-    
+
     // Crear un enlace para descargar
     const reportTypeNames = {
       inventory: 'Inventario',
       clients: 'Clientes',
       invoices: 'Facturas'
     };
-    
+
     const fileName = `Reporte_${reportTypeNames[selectedReport.value]}_${dateStart.value}_${dateEnd.value}.xls`;
-    
+
     // Crear un Blob para almacenar el contenido HTML
     const blob = new Blob([
-      '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Reporte</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>td, th { border: 1px solid #ccc; } table { border-collapse: collapse; width: 100%; }</style></head><body><table>' + 
-      tempDiv.innerHTML + 
+      '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Reporte</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>td, th { border: 1px solid #ccc; } table { border-collapse: collapse; width: 100%; }</style></head><body><table>' +
+      tempDiv.innerHTML +
       '</table></body></html>'
     ], {
       type: 'application/vnd.ms-excel'
     });
-    
+
     // Crear un enlace para descargar
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = fileName;
-    
+
     // Simular un clic para descargar
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     snackbarColor.value = "success";
     snackbarMessage.value = "Archivo Excel generado exitosamente";
     isSnackbarVisible.value = true;
   } catch (error) {
     console.error("Error al generar Excel:", error);
-    
+
     snackbarColor.value = "error";
     snackbarMessage.value = "Error al generar el archivo Excel: " + (error.message || "Error desconocido");
     isSnackbarVisible.value = true;
@@ -1063,68 +1011,102 @@ const downloadPdf = async () => {
     console.log("No se puede generar PDF en el servidor");
     return;
   }
- 
+
   try {
     isDownloadingPdf.value = true;
     isDownloadingDialog.value = true;
     downloadingMessage.value = "Preparando para imprimir...";
-    
+
     // Esperar un momento para mostrar el mensaje
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // En lugar de generar un PDF, mostraremos un mensaje para imprimir la página
     isDownloadingPdf.value = false;
     isDownloadingDialog.value = false;
-    
+
     snackbarColor.value = "info";
     snackbarMessage.value = "Para obtener un PDF, utilice la función de imprimir del navegador (Ctrl+P) y seleccione 'Guardar como PDF'";
     isSnackbarVisible.value = true;
-    
+
     // Opcional: Lanzar la función de imprimir del navegador
     setTimeout(() => {
       if (window) window.print();
     }, 2000);
   } catch (error) {
     console.error("Error al preparar la impresión:", error);
-    
+
     snackbarColor.value = "error";
     snackbarMessage.value = "Error al preparar la impresión: " + (error.message || "Error desconocido");
     isSnackbarVisible.value = true;
-    
+
     isDownloadingPdf.value = false;
     isDownloadingDialog.value = false;
   }
 };
 
 // Ver detalles de factura
+// ✅ Reemplazar viewInvoiceDetails:
 const viewInvoiceDetails = async (id) => {
   try {
+    // Verificar si es una factura local (del localStorage)
+    if (id.toString().startsWith('local_')) {
+      const savedHistory = localStorage.getItem('invoiceHistory')
+      if (savedHistory) {
+        const invoices = JSON.parse(savedHistory)
+        const index = parseInt(id.replace('local_', ''))
+        const invoice = invoices[index]
+
+        if (invoice) {
+          // Convertir formato local a formato esperado
+          selectedInvoice.value = {
+            id: id,
+            numeroFactura: invoice.numero,
+            fecha: new Date(invoice.fecha).toLocaleDateString('es-HN'),
+            cliente: invoice.cliente?.nombre || 'Cliente Local',
+            total: invoice.totales?.total || 0,
+            subtotal: invoice.totales?.subtotal || 0,
+            impuesto: invoice.totales?.isv || 0,
+            items: invoice.productos?.map(prod => ({
+              id: prod.id,
+              nombreProducto: prod.nombre,
+              cantidad: prod.cantidad,
+              precioUnitario: prod.precio_unitario,
+              subtotal: prod.subtotal
+            })) || []
+          }
+
+          dialogInvoiceDetails.value = true
+          return
+        }
+      }
+    }
+
+    // Si no es local, intentar obtener del API
     const response = await $fetch(`${runtimeConfig.public.apiBase}/factura/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    });
-    
-    selectedInvoice.value = response;
-    
-    // Formatear la fecha si existe
+    })
+
+    selectedInvoice.value = response
+
     if (selectedInvoice.value && selectedInvoice.value.fecha) {
       try {
-        const fechaObj = new Date(selectedInvoice.value.fecha);
-        selectedInvoice.value.fecha = fechaObj.toLocaleDateString('es-HN');
+        const fechaObj = new Date(selectedInvoice.value.fecha)
+        selectedInvoice.value.fecha = fechaObj.toLocaleDateString('es-HN')
       } catch (e) {
-        console.error("Error al formatear fecha:", e);
+        console.error("Error al formatear fecha:", e)
       }
     }
-    
-    dialogInvoiceDetails.value = true;
+
+    dialogInvoiceDetails.value = true
   } catch (error) {
-    console.error("Error al obtener detalles de factura:", error);
-    snackbarColor.value = "error";
-    snackbarMessage.value = error.data?.message || "Error al obtener los detalles de la factura";
-    isSnackbarVisible.value = true;
-    
+    console.error("Error al obtener detalles de factura:", error)
+    snackbarColor.value = "error"
+    snackbarMessage.value = error.data?.message || "Error al obtener los detalles de la factura"
+    isSnackbarVisible.value = true
+
     // Crear datos de ejemplo si hay error
     selectedInvoice.value = {
       id: id,
@@ -1138,62 +1120,200 @@ const viewInvoiceDetails = async (id) => {
         { id: 1, nombreProducto: 'Producto Ejemplo 1', cantidad: 2, precioUnitario: 500, subtotal: 1000 },
         { id: 2, nombreProducto: 'Producto Ejemplo 2', cantidad: 1, precioUnitario: 500, subtotal: 500 }
       ]
-    };
-    
-    dialogInvoiceDetails.value = true;
+    }
+
+    dialogInvoiceDetails.value = true
   }
-};
+}
 
 // Imprimir factura específica
+// ✅ Reemplazar completamente printInvoice:
 const printInvoice = async (id) => {
   try {
-    // Obtener los datos de la factura primero
-    const response = await $fetch(`${runtimeConfig.public.apiBase}/factura/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let invoiceToShow = null;
     
-    // Almacenar los datos de la factura
-    invoiceData.value = response;
-    
-    // Convertir el monto total a palabras
-    if (invoiceData.value && invoiceData.value.total) {
-      amountInWords.value = convertNumberToWords(invoiceData.value.total);
+    // Verificar si es una factura local (del localStorage)
+    if (id.toString().startsWith('local_')) {
+      const savedHistory = localStorage.getItem('invoiceHistory');
+      if (savedHistory) {
+        const invoices = JSON.parse(savedHistory);
+        const index = parseInt(id.replace('local_', ''));
+        const invoice = invoices[index];
+        
+        if (invoice) {
+          // Usar el formato exacto de caja
+          invoiceToShow = {
+            numero: invoice.numero,
+            fecha: invoice.fecha,
+            cliente: invoice.cliente,
+            empresa: invoice.empresa,
+            productos: invoice.productos,
+            totales: invoice.totales,
+            metodoPago: invoice.metodoPago,
+            cajero: invoice.cajero,
+            cai: invoice.cai,
+            amountInWords: invoice.amountInWords
+          };
+        }
+      }
     } else {
-      amountInWords.value = "CERO LEMPIRAS";
+      // Intentar obtener del API y convertir al formato de caja
+      try {
+        const response = await $fetch(`${runtimeConfig.public.apiBase}/factura/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        
+        // Convertir respuesta del API al formato de caja
+        invoiceToShow = {
+          numero: response.numeroFactura || response.numero,
+          fecha: response.fecha,
+          cliente: {
+            nombre: response.Cliente?.nombre || response.cliente || 'Cliente',
+            rtn: response.Cliente?.rtn || response.rtn || '',
+            direccion: response.Cliente?.direccion || 'Ciudad'
+          },
+          empresa: {
+            nombre: "Facturalize",
+            sucursal: "LA CEIBA", 
+            telefono: "98765432",
+            email: "facturalize@gmail.com",
+            sucursalDetalle: "EMPRESA - LA CEIBA"
+          },
+          productos: response.items?.map(item => ({
+            nombre: item.nombreProducto,
+            cantidad: item.cantidad,
+            precio_unitario: item.precioUnitario,
+            subtotal: item.subtotal
+          })) || [],
+          totales: {
+            subtotal: response.subtotal,
+            isv: response.impuesto,
+            total: response.total
+          },
+          metodoPago: {
+            nombre: "Efectivo"
+          },
+          cajero: "Empleado",
+          cai: "9383u88hdn38d38",
+          amountInWords: convertNumberToWords(response.total)
+        };
+      } catch (apiError) {
+        console.error("Error del API:", apiError);
+        throw apiError;
+      }
     }
     
-    // Mostrar el modal de factura
-    showInvoiceModal.value = true;
+    if (!invoiceToShow) {
+      throw new Error("No se pudo cargar la factura");
+    }
+    
+    // Generar e imprimir usando el formato exacto de caja
+    printInvoiceWithCajaFormat(invoiceToShow);
     
   } catch (error) {
     console.error("Error al obtener datos de factura:", error);
     snackbarColor.value = "error";
     snackbarMessage.value = error.data?.message || "Error al obtener los datos de la factura";
     isSnackbarVisible.value = true;
-    
-    // Crear datos de ejemplo si hay error
-    invoiceData.value = {
-      id: id,
-      numeroFactura: '000-002-02-00000000',
-      fecha: new Date().toISOString(),
-      cliente: 'Cliente Ejemplo',
-      rtn: '08011990123456',
-      direccion: 'Colonia Ejemplo, Ciudad',
-      total: 1500,
-      subtotal: 1304.35,
-      impuesto: 195.65,
-      items: [
-        { nombreProducto: 'Producto Ejemplo 1', cantidad: 2, precioUnitario: 500, subtotal: 1000 },
-        { nombreProducto: 'Producto Ejemplo 2', cantidad: 1, precioUnitario: 500, subtotal: 500 }
-      ]
-    };
-    
-    amountInWords.value = convertNumberToWords(invoiceData.value.total);
-    showInvoiceModal.value = true;
   }
+};
+
+// ✅ Agregar nueva función para imprimir con formato de caja:
+const printInvoiceWithCajaFormat = (invoiceData) => {
+  if (!isBrowser) return;
+
+  const printWindow = window.open('', '_blank');
+  
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.toLocaleDateString("es-ES")} ${date
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+  };
+  
+  const htmlContent = [
+    '<!DOCTYPE html>',
+    '<html>',
+    '<head>',
+    '<title>Factura ' + invoiceData.numero + '</title>',
+    '<style>',
+    'body { font-family: "Courier New", monospace; margin: 0; padding: 10px; color: #000; font-size: 12px; width: 80mm; }',
+    '.invoice { width: 100%; }',
+    '.text-center { text-align: center; }',
+    '.mb-4 { margin-bottom: 8px; }',
+    '.font-weight-bold { font-weight: bold; }',
+    'table { width: 100%; border-collapse: collapse; font-size: 10px; }',
+    'th, td { text-align: left; padding: 1px 2px; border-bottom: 1px solid #000; }',
+    '.text-right { text-align: right; }',
+    'div { margin: 2px 0; }',
+    '@page { size: 80mm auto; margin: 2mm; }',
+    '@media print { body { width: 80mm; } }',
+    '</style>',
+    '</head>',
+    '<body>',
+    '<div class="invoice">',
+    '<div class="text-center">',
+    '<div class="font-weight-bold">' + invoiceData.empresa.nombre + '</div>',
+    '<div>' + invoiceData.empresa.sucursal + '</div>',
+    '<div>Tel: ' + invoiceData.empresa.telefono + '</div>',
+    '<div>Email: ' + invoiceData.empresa.email + '</div>',
+    '<div>Sucursal: ' + invoiceData.empresa.sucursalDetalle + '</div>',
+    '<div>------------------------</div>',
+    '</div>',
+    '<div class="font-weight-bold">Factura: ' + invoiceData.numero + '</div>',
+    '<div>Fecha Emisión: ' + formatDateTime(invoiceData.fecha) + '</div>',
+    '<div>Cajer@: ' + invoiceData.cajero + '</div>',
+    '<div>------------------------</div>',
+    '<div>Cliente: ' + invoiceData.cliente.nombre + '</div>',
+    '<div>R.T.N: ' + (invoiceData.cliente.rtn || "00000000000000") + '</div>',
+    '<div>------------------------</div>',
+    '<table>',
+    '<tr><th>Cant.</th><th>Nombre</th><th>Precio</th><th>T</th></tr>',
+    invoiceData.productos.map(item => 
+      '<tr><td>' + item.cantidad + '</td><td>' + item.nombre + '</td><td>' + item.precio_unitario.toFixed(2) + '</td><td>G</td></tr>'
+    ).join(''),
+    '</table>',
+    '<div>------------------------</div>',
+    '<div>IMPORTE EXONERADO: 0.00</div>',
+    '<div>IMPORTE GRAVADO 15%: ' + invoiceData.totales.subtotal + '</div>',
+    '<div>IMPORTE GRAVADO 18%: 0.00</div>',
+    '<div>Rebajas y Descuento: 0.00</div>',
+    '<div>ISV 15%: ' + invoiceData.totales.isv + '</div>',
+    '<div>ISV 18%: 0.00</div>',
+    '<div class="font-weight-bold">Total: ' + invoiceData.totales.total + '</div>',
+    '<div>------------------------</div>',
+    '<div>Tipo de Pago: ' + invoiceData.metodoPago.nombre + '</div>',
+    (invoiceData.metodoPago.efectivo ? 
+      '<div>Efectivo: ' + invoiceData.metodoPago.efectivo.toFixed(2) + '</div>' +
+      '<div>Cambio: ' + (invoiceData.metodoPago.cambio || '0.00') + '</div>' : ''),
+    '<div class="text-center font-weight-bold">' + invoiceData.amountInWords + '</div>',
+    '<div>------------------------</div>',
+    '<div style="font-size: 10px;">No. de Orden de Compra Exenta:</div>',
+    '<div style="font-size: 10px;">No. Constancia de Registro de Exonerados:</div>',
+    '<div style="font-size: 10px;">No. Registro de SAG:</div>',
+    '<div style="font-size: 10px;">CAI: ' + invoiceData.cai + '</div>',
+    '<div style="font-size: 10px;">Rango Facturación: 000-002-01-00020001 A 000-002-01-00030001</div>',
+    '<div style="font-size: 10px;">Fecha Límite de Emisión: 11-11-2025</div>',
+    '<div class="text-center font-weight-bold" style="font-size: 10px;">LA FACTURA ES BENEFICIO DE TODOS, EXÍJALA</div>',
+    '</div>',
+    '<script>',
+    'window.onload = function() {',
+    'setTimeout(function() { window.print(); window.close(); }, 500);',
+    '};',
+    '</scr' + 'ipt>',
+    '</body>',
+    '</html>'
+  ].join('');
+  
+  printWindow.document.write(htmlContent);
+  printWindow.document.close();
 };
 
 // Imprimir factura actual
@@ -1201,7 +1321,7 @@ const printCurrentInvoice = () => {
   if (!isBrowser) return;
 
   const printWindow = window.open("", "_blank");
-  
+
   // Estilos para la impresión
   const styles = `
     body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
@@ -1219,7 +1339,7 @@ const printCurrentInvoice = () => {
     .amount-in-words { margin: 20px 0; border: 1px solid #000; padding: 10px; }
     .invoice-footer { text-align: center; margin-top: 30px; font-size: 0.9em; }
   `;
-  
+
   // HTML para la ventana de impresión
   if (printWindow && document && document.getElementById('invoice-content')) {
     printWindow.document.write(`
@@ -1244,7 +1364,7 @@ const printCurrentInvoice = () => {
       </body>
       </html>
     `);
-    
+
     printWindow.document.close();
   }
 };
@@ -1258,7 +1378,7 @@ const closeInvoiceDialog = () => {
 // Convertir número a palabras
 const convertNumberToWords = (number) => {
   if (!number) return "CERO LEMPIRAS";
-  
+
   const unidades = [
     "",
     "UN",
@@ -1365,7 +1485,8 @@ const convertNumberToWords = (number) => {
 <style>
 /* Estilos para la impresión */
 @media print {
-  .v-breadcrumbs, 
+
+  .v-breadcrumbs,
   .v-select,
   .v-text-field,
   .v-btn,
@@ -1375,29 +1496,29 @@ const convertNumberToWords = (number) => {
   .v-card-title {
     display: none !important;
   }
-  
+
   .v-card {
     box-shadow: none !important;
     border: none !important;
   }
-  
+
   .v-data-table {
     width: 100%;
     border-collapse: collapse;
   }
-  
+
   .v-data-table th,
   .v-data-table td {
     border: 1px solid #000 !important;
     padding: 8px !important;
   }
-  
+
   .v-chip {
     border: none !important;
     box-shadow: none !important;
     padding: 2px 6px !important;
   }
-  
+
   @page {
     size: landscape;
     margin: 1cm;
@@ -1477,9 +1598,17 @@ const convertNumberToWords = (number) => {
   font-size: 12px;
 }
 
-.text-left { text-align: left; }
-.text-center { text-align: center; }
-.text-right { text-align: right; }
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
 
 .invoice-totals {
   width: 50%;
